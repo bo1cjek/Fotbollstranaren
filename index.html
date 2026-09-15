@@ -168,7 +168,7 @@
 
             <div id="tab-settings" class="tab-content">
                 <h2>Molnstatus</h2>
-                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Appen synkar automatiskt mot ditt GitHub-repository i bakgrunden. Inga inställningar behövs!</p>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Appen synkar automatiskt mot ditt GitHub-repository. Använder inbyggd token.</p>
 
                 <div class="btn-group" style="margin-top: 10px;">
                     <button class="btn-secondary" style="flex:1" onclick="fetchFromGitHub(false)">☁️ Hämta från molnet</button>
@@ -205,13 +205,10 @@
     </div>
 
     <script>
-        // ==========================================
-        // BYT UT DESSA MED DINA FAKTISKA UPPGIFTER:
-        // ==========================================
         const HARDCODED_CONFIG = {
             user: "bo1cjek",
             repo: "Fotbollstranaren",
-            token: "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" // Ex. ghp_xxxx...
+            token: "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"
         };
 
         const DEFAULT_DATA = { teams: [], matches: [] };
@@ -229,22 +226,33 @@
         };
 
         window.onload = function() {
-            fetchFromGitHub(true); // Hämtar automatiskt vid start
+            fetchFromGitHub(true); // Hämtar automatiskt via API vid start
         };
 
         function saveData() { 
             localStorage.setItem('fotbollApp_data', JSON.stringify(appData)); 
         }
 
+        // Hämta via GitHub API (med token) istället för publik URL
         async function fetchFromGitHub(silent = false) {
             const user = HARDCODED_CONFIG.user;
             const repo = HARDCODED_CONFIG.repo;
+            const token = HARDCODED_CONFIG.token;
 
             if (!silent) showStatus('Hämtar data från GitHub...', false);
             try {
-                const response = await fetch(`https://raw.githubusercontent.com/${user}/${repo}/main/data.json?t=${Date.now()}`);
-                if (!response.ok) throw new Error('Kunde inte hitta data.json');
-                const cloudData = await response.json();
+                const response = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/data.json?t=${Date.now()}`, {
+                    headers: { 
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (!response.ok) throw new Error('Kunde inte läsa data.json från GitHub');
+                
+                const fileData = await response.json();
+                const decodedContent = decodeURIComponent(escape(atob(fileData.content)));
+                const cloudData = JSON.parse(decodedContent);
+
                 if (cloudData && Array.isArray(cloudData.teams)) {
                     appData = cloudData;
                     saveData();
@@ -274,9 +282,11 @@
 
             showStatus('Sparar till GitHub...', false);
             try {
-                // 1. Hämta filens nuvarande SHA (krävs av GitHub API för uppdatering)
                 const getRes = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/data.json`, {
-                    headers: { 'Authorization': `token ${token}` }
+                    headers: { 
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
                 });
 
                 let sha = null;
@@ -285,13 +295,13 @@
                     sha = fileData.sha;
                 }
 
-                // 2. Skicka nya datan
                 const contentEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(appData, null, 2))));
                 const putRes = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/data.json`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `token ${token}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
                     },
                     body: JSON.stringify({
                         message: "Uppdaterar taktik och lag via webbapp",
@@ -346,7 +356,7 @@
             document.getElementById('new-team-name').value = '';
             renderTeamSelects();
             selectTeam(newTeam.id);
-            uploadToGitHub(); // Synka direkt
+            uploadToGitHub();
         }
 
         function editTeamName() {
@@ -656,7 +666,7 @@
 
                 saveData();
                 renderBoard();
-                uploadToGitHub(); // Synka till molnet när man flyttat en spelare
+                uploadToGitHub();
             }
 
             function drag(e) {

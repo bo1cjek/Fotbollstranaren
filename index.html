@@ -236,27 +236,60 @@
             localStorage.setItem('fotbollApp_data', JSON.stringify(appData)); 
         }
 
-        async function fetchFromGitHub(silent = false) {
+        async function uploadToGitHub() {
             const user = HARDCODED_CONFIG.user;
             const repo = HARDCODED_CONFIG.repo;
-            
-            if (!silent) showStatus('Hämtar data från GitHub...', false);
+            const token = HARDCODED_CONFIG.token;
+
+            showStatus('Sparar till GitHub...', false);
             try {
-                const response = await fetch(`https://raw.githubusercontent.com/${user}/${repo}/main/data.json?t=${Date.now()}`);
-                if (!response.ok) throw new Error('Kunde inte hitta data.json');
-                const cloudData = await response.json();
-                if (cloudData && Array.isArray(cloudData.teams)) {
-                    appData = cloudData;
+                let sha = null;
+                
+                // 1. Försök hämta filens nuvarande SHA från GitHub
+                const getRes = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/data.json`, {
+                    headers: { 
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (getRes.ok) {
+                    const fileData = await getRes.json();
+                    sha = fileData.sha;
+                }
+
+                // 2. Skicka datan tillsammans med sha-koden
+                const contentEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(appData, null, 2))));
+                const bodyData = {
+                    message: "Uppdaterar taktik och lag via webbapp",
+                    content: contentEncoded
+                };
+                if (sha) {
+                    bodyData.sha = sha;
+                }
+
+                const putRes = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/data.json`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify(bodyData)
+                });
+
+                if (putRes.ok) {
                     saveData();
-                    if (!silent) showStatus('✅ Synkad med molnet!', false);
+                    showStatus('✅ Sparat och synkat till GitHub!', false);
+                } else {
+                    const errJson = await putRes.json();
+                    throw new Error(errJson.message || 'Okänt GitHub-fel');
                 }
             } catch (err) {
-                if (!silent) showStatus('Kunde inte nå molnet, laddar lokalt.', true);
-                loadLocalFallback();
+                showStatus('❌ Gick inte att spara: ' + err.message, true);
             }
-            refreshUI();
         }
-
+        
         function loadLocalFallback() {
             const saved = localStorage.getItem('fotbollApp_data');
             if (saved) {

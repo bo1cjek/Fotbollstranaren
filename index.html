@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Fotbollstränaren v6.2</title>
+    <title>Fotbollstränaren</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -32,15 +32,12 @@
 
         button.btn-primary { background: var(--primary); color: white; border: none; font-weight: 600; padding: 12px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 6px; }
         button.btn-success { background: var(--success); color: white; border: none; font-weight: 600; padding: 12px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 6px; }
-        button.btn-secondary { background: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; padding: 8px; border-radius: 4px; font-weight: 600; cursor: pointer; }
+        button.btn-secondary { background: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; padding: 8px; border-radius: 4px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 6px; }
         button.btn-danger { background: #fee2e2; color: var(--danger); border: 1px solid #fca5a5; padding: 6px; border-radius: 4px; font-weight: 600; cursor: pointer; }
 
         .btn-group { display: flex; gap: 6px; }
         .list-item { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; }
         .list-item.selected { border-color: #0284c7; background: #f0f9ff; }
-        .status-msg { font-size: 0.85rem; font-weight: bold; margin-top: 8px; padding: 8px; border-radius: 4px; text-align: center; }
-        .status-success { background: #dcfce7; color: #166534; }
-        .status-error { background: #fee2e2; color: #991b1b; }
 
         #main-area { flex: 1; display: flex; flex-direction: column; background: #0f172a; position: relative; overflow: hidden; }
         #match-header { background: #1e293b; color: #ffffff; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
@@ -81,7 +78,7 @@
                 <button class="tab-btn active" onclick="switchTab('teams', event)">Lag</button>
                 <button class="tab-btn" onclick="switchTab('matches', event)">Matcher</button>
                 <button class="tab-btn" onclick="switchTab('tactics', event)">Taktik</button>
-                <button class="tab-btn" onclick="switchTab('settings', event)">Moln</button>
+                <button class="tab-btn" onclick="switchTab('sync', event)">Dela</button>
             </div>
 
             <div id="tab-teams" class="tab-content active">
@@ -122,7 +119,7 @@
                 </div>
                 <div class="form-group">
                     <label for="match-opponent">Motståndare:</label>
-                    <input type="text" id="match-opponent" placeholder="Ex. Rävåsens IK">
+                    <input type="text" id="match-opponent" placeholder="Ex. Motståndarlaget">
                 </div>
                 <div class="form-group">
                     <label for="match-type">Spelform:</label>
@@ -165,22 +162,14 @@
                 </div>
             </div>
 
-            <div id="tab-settings" class="tab-content">
-                <h2>Molnsynk (Delad ID)</h2>
-                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Alla tränare använder samma ID för att dela på samma moln-data.</p>
-                
-                <div class="form-group">
-                    <label for="bin-id-input">Moln-ID (Bin ID):</label>
-                    <input type="text" id="bin-id-input" placeholder="Klistra in eller skapa nytt">
+            <div id="tab-sync" class="tab-content">
+                <h2>Dela med kollegor</h2>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Exportera filen och skicka till dina kollegor, eller ladda in en uppdaterad fil.</p>
+                <button class="btn-primary" onclick="exportData()">📤 Exportera lag & matcher</button>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="import-file">Importera fil från kollega:</label>
+                    <input type="file" id="import-file" accept=".json" onchange="importData(event)">
                 </div>
-                <button class="btn-secondary" onclick="createNewCloudBin()">Skapa nytt delat moln-ID</button>
-
-                <div class="btn-group" style="margin-top: 15px;">
-                    <button class="btn-primary" onclick="loadFromCloud()">☁️ Hämta från molnet</button>
-                    <button class="btn-success" onclick="saveToCloud()">💾 Spara till molnet</button>
-                </div>
-
-                <div id="global-status" class="status-msg" style="display:none;"></div>
             </div>
         </div>
 
@@ -188,9 +177,8 @@
             <div id="match-header">
                 <div>
                     <div id="display-match-title">Ingen match vald</div>
-                    <span id="display-match-info">Välj/skapa en match i menyn</span>
+                    <span id="display-match-info">Välj eller skapa en match i menyn</span>
                 </div>
-                <button class="btn-success" style="width: auto; padding: 6px 12px; font-size: 0.85rem;" onclick="saveToCloud()">💾 Spara till molnet</button>
             </div>
 
             <div id="pitch-container">
@@ -210,9 +198,7 @@
     </div>
 
     <script>
-        let CLOUD_BIN_ID = localStorage.getItem('fotbollApp_binId') || '';
-        const DEFAULT_DATA = { teams: [], matches: [] };
-        let appData = { teams: [], matches: [] };
+        let appData = JSON.parse(localStorage.getItem('fotbollApp_data')) || { teams: [], matches: [] };
         let currentTeamId = null;
         let currentMatchId = null;
 
@@ -226,94 +212,46 @@
         };
 
         window.onload = function() {
-            document.getElementById('bin-id-input').value = CLOUD_BIN_ID;
-            if (CLOUD_BIN_ID) {
-                loadFromCloud(true);
-            } else {
-                appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
-                refreshUI();
-            }
+            refreshUI();
         };
+
+        function saveData() {
+            localStorage.setItem('fotbollApp_data', JSON.stringify(appData));
+        }
 
         function switchTab(tabName, event) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             if (event && event.target) event.target.classList.add('active');
-            const targetTab = document.getElementById('tab-' + tabName);
-            if (targetTab) targetTab.classList.add('active');
+            const target = document.getElementById('tab-' + tabName);
+            if (target) target.classList.add('active');
         }
 
-        function showStatus(text, isError = false) {
-            const statusDiv = document.getElementById('global-status');
-            if(!statusDiv) return;
-            statusDiv.style.display = 'block';
-            statusDiv.className = 'status-msg ' + (isError ? 'status-error' : 'status-success');
-            statusDiv.innerText = text;
-            setTimeout(() => { statusDiv.style.display = 'none'; }, 5000);
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "fotboll_data.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
         }
 
-        async function createNewCloudBin() {
-            const uniqueId = 'fotboll_' + Math.random().toString(36).substring(2, 9);
-            CLOUD_BIN_ID = uniqueId;
-            localStorage.setItem('fotbollApp_binId', CLOUD_BIN_ID);
-            const inputEl = document.getElementById('bin-id-input');
-            if(inputEl) inputEl.value = CLOUD_BIN_ID;
-            await saveToCloud();
-            showStatus('Nytt moln-ID skapat! Dela detta ID med dina tränarkollegor.', false);
-        }
-
-        async function loadFromCloud(silent = false) {
-            const inputEl = document.getElementById('bin-id-input');
-            const binId = inputEl ? inputEl.value.trim() : CLOUD_BIN_ID;
-            if (!binId) {
-                if(!silent) alert('Ange eller skapa ett Moln-ID först!');
-                return;
-            }
-            CLOUD_BIN_ID = binId;
-            localStorage.setItem('fotbollApp_binId', CLOUD_BIN_ID);
-
-            if(!silent) showStatus('Hämtar från molnet...', false);
-            try {
-                const res = await fetch(`https://json.npoint.io/${CLOUD_BIN_ID}`);
-                if (!res.ok) throw new Error('Kunde inte nå molnet');
-                appData = await res.json();
-                refreshUI();
-                if(!silent) showStatus('✅ Hämtat från molnet!', false);
-            } catch(e) {
-                if(!silent) showStatus('Kunde inte hitta data med detta ID.', true);
-            }
-        }
-
-        async function saveToCloud() {
-            const inputEl = document.getElementById('bin-id-input');
-            const binId = inputEl ? inputEl.value.trim() : CLOUD_BIN_ID;
-            if (!binId) {
-                return createNewCloudBin();
-            }
-            CLOUD_BIN_ID = binId;
-            localStorage.setItem('fotbollApp_binId', CLOUD_BIN_ID);
-
-            showStatus('Sparar till molnet...', false);
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(appData)
-                });
-                if(res.ok) {
-                    const json = await res.json();
-                    if(json.metadata && json.metadata.id) {
-                        CLOUD_BIN_ID = json.metadata.id;
-                        if(inputEl) inputEl.value = CLOUD_BIN_ID;
-                        localStorage.setItem('fotbollApp_binId', CLOUD_BIN_ID);
-                    }
-                    showStatus('✅ Sparat till molnet!', false);
-                } else {
-                    throw new Error();
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    appData = JSON.parse(e.target.result);
+                    saveData();
+                    refreshUI();
+                    alert('Data har importerats utan problem!');
+                } catch (err) {
+                    alert('Kunde inte läsa filen. Kontrollera att det är rätt fil.');
                 }
-            } catch(e) {
-                showStatus('✅ Sparat lokalt/Moln uppdaterat.', false);
-            }
+            };
+            reader.readAsText(file);
         }
 
         function refreshUI() {
@@ -328,13 +266,13 @@
         }
 
         function createTeam() {
-            const inputEl = document.getElementById('new-team-name');
-            const name = inputEl ? inputEl.value.trim() : '';
+            const nameEl = document.getElementById('new-team-name');
+            const name = nameEl ? nameEl.value.trim() : '';
             if (!name) return alert('Ange lagnamn!');
             const newTeam = { id: 'team_' + Date.now(), name: name, players: [] };
             appData.teams.push(newTeam);
-            saveToCloud();
-            if(inputEl) inputEl.value = '';
+            saveData();
+            if(nameEl) nameEl.value = '';
             renderTeamSelects();
             selectTeam(newTeam.id);
         }
@@ -345,7 +283,7 @@
             const newName = prompt('Nytt lagnamn:', team.name);
             if (newName) {
                 team.name = newName.trim();
-                saveToCloud();
+                saveData();
                 renderTeamSelects();
                 selectTeam(currentTeamId);
             }
@@ -356,7 +294,7 @@
                 appData.teams = appData.teams.filter(t => t.id !== currentTeamId);
                 appData.matches = appData.matches.filter(m => m.teamId !== currentTeamId);
                 currentTeamId = null;
-                saveToCloud();
+                saveData();
                 renderTeamSelects();
                 selectTeam(null);
                 renderMatchList();
@@ -408,7 +346,7 @@
             const team = appData.teams.find(t => t.id === currentTeamId);
             if(!team) return;
             team.players.push({ id: 'p_' + Date.now(), name: name, number: number || '' });
-            saveToCloud();
+            saveData();
             if(nameEl) nameEl.value = '';
             if(numEl) numEl.value = '';
             renderPlayers();
@@ -436,7 +374,7 @@
             const team = appData.teams.find(t => t.id === currentTeamId);
             if(!team) return;
             team.players = team.players.filter(p => p.id !== playerId);
-            saveToCloud();
+            saveData();
             renderPlayers();
             if (currentMatchId) renderBoard();
         }
@@ -464,7 +402,7 @@
             }
 
             appData.matches.push(newMatch);
-            saveToCloud();
+            saveData();
             renderMatchList();
             loadMatch(newMatch.id);
         }
@@ -491,7 +429,7 @@
         function deleteMatch(id) {
             appData.matches = appData.matches.filter(m => m.id !== id);
             if (currentMatchId === id) currentMatchId = null;
-            saveToCloud();
+            saveData();
             renderMatchList();
             clearBoard();
         }
@@ -544,7 +482,7 @@
                 match.squad.push(playerId);
                 match.positions[playerId] = { x: 0, y: 0, onBench: true };
             }
-            saveToCloud();
+            saveData();
             renderBoard();
         }
 
@@ -569,7 +507,7 @@
                     }
                 });
             }
-            saveToCloud();
+            saveData();
             renderBoard();
         }
 
@@ -662,7 +600,7 @@
                     match.positions[playerId] = { x: targetX, y: targetY, onBench: false };
                 }
 
-                saveToCloud();
+                saveData();
                 renderBoard();
             }
 

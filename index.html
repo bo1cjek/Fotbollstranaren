@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Fotbollstränaren v7.1</title>
+    <title>Fotbollstränaren v7.2</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -39,7 +39,6 @@
         .list-item { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; }
         .list-item.selected { border-color: #0284c7; background: #f0f9ff; }
         
-        /* Diskret statusindikator */
         #sync-status { font-size: 0.75rem; color: #94a3b8; text-align: center; padding: 4px; background: #1e293b; }
 
         #main-area { flex: 1; display: flex; flex-direction: column; background: #0f172a; position: relative; overflow: hidden; }
@@ -191,8 +190,8 @@
     </div>
 
     <script>
-        // Delad öppen moln-endpoint för automatisk synk
-        const CLOUD_URL = 'https://api.npoint.io/d47c94318c6753065d0b';
+        // BYT UT DENNA LÄNK mot din egen från npoint.io!
+        const CLOUD_URL = https://api.npoint.io/011de991c224ccd6ebc6;
 
         let appData = { teams: [], matches: [] };
         let currentTeamId = null;
@@ -210,7 +209,6 @@
 
         window.onload = function() {
             loadFromCloud();
-            // Synka automatiskt var 10:e sekund så kollegans ändringar dyker upp
             setInterval(loadFromCloud, 10000);
         };
 
@@ -232,9 +230,11 @@
                         refreshUI();
                         updateStatus('☁️ Synkat med molnet', '#4ade80');
                     }
+                } else {
+                    updateStatus('⚠️ Kontrollera npoint-länk (404)', '#f87171');
                 }
             } catch(e) {
-                updateStatus('⚠️ Offline (visar lokalt)', '#f87171');
+                updateStatus('⚠️ Offline', '#f87171');
             }
         }
 
@@ -594,11 +594,12 @@
                 let clientX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX);
                 let clientY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY);
 
-                const match = appData.matches.find(m => m.id === currentMatchId);
-                if (!match) return;
+                const match = appData.matches.matches.find(m => m.id === currentMatchId); // fix reference below
+                const currentMatch = appData.matches.find(m => m.id === currentMatchId);
+                if (!currentMatch) return;
 
                 if (clientY >= benchRect.top) {
-                    match.positions[playerId] = { x: 0, y: 0, onBench: true };
+                    currentMatch.positions[playerId] = { x: 0, y: 0, onBench: true };
                 } else {
                     let targetX = ((clientX - pitchRect.left) / pitchRect.width) * 100;
                     let targetY = ((clientY - pitchRect.top) / pitchRect.height) * 100;
@@ -606,7 +607,7 @@
                     targetX = Math.max(3, Math.min(97, targetX));
                     targetY = Math.max(3, Math.min(97, targetY));
 
-                    match.positions[playerId] = { x: targetX, y: targetY, onBench: false };
+                    currentMatch.positions[playerId] = { x: targetX, y: targetY, onBench: false };
                 }
 
                 saveToCloud();

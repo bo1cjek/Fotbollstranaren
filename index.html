@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Fotbollstränaren v6.0 (GitHub Sync)</title>
+    <title>Fotbollstränaren v6.1</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -168,15 +168,15 @@
 
             <div id="tab-settings" class="tab-content">
                 <h2>GitHub Molnsynk</h2>
-                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Fyll i dina GitHub-uppgifter nedan en gång. Då sparas allt i samma fil för alla som använder appen!</p>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Fyll i dina GitHub-uppgifter nedan för att synka mot molnet.</p>
                 
                 <div class="form-group">
                     <label>GitHub Användarnamn:</label>
-                    <input type="text" id="gh-user" placeholder="Ditt GitHub-användarnamn">
+                    <input type="text" id="gh-user" placeholder="Ditt användarnamn">
                 </div>
                 <div class="form-group">
                     <label>Repository Namn:</label>
-                    <input type="text" id="gh-repo" placeholder="Ex. fotbollsapp">
+                    <input type="text" id="gh-repo" placeholder="Ex. Fotbollstranaren">
                 </div>
                 <div class="form-group">
                     <label>Personal Access Token (ghp_...):</label>
@@ -236,7 +236,9 @@
 
         window.onload = function() {
             loadGitHubSettingsToUI();
-            fetchFromGitHub(true); // Hämtar automatiskt vid start
+            loadLocalFallback(); // Starta alltid upp direkt lokalt
+            refreshUI();
+            fetchFromGitHub(true); // Försök hämta molndata i bakgrunden
         };
 
         function saveData() { 
@@ -253,19 +255,15 @@
             localStorage.setItem('gh_user', document.getElementById('gh-user').value.trim());
             localStorage.setItem('gh_repo', document.getElementById('gh-repo').value.trim());
             localStorage.setItem('gh_token', document.getElementById('gh-token').value.trim());
-            showStatus('✅ GitHub-inställningar sparade lokalt!', false);
+            showStatus('✅ GitHub-inställningar sparade!', false);
         }
 
         async function fetchFromGitHub(silent = false) {
             const user = localStorage.getItem('gh_user');
             const repo = localStorage.getItem('gh_repo');
-            if (!user || !repo) {
-                if (!silent) showStatus('⚠️ Fyll i användarnamn och repository under inställningar.', true);
-                loadLocalFallback();
-                return;
-            }
+            if (!user || !repo) return;
 
-            if (!silent) showStatus('Hämtar data från GitHub...', false);
+            if (!silent) showStatus('Hämtar data från molnet...', false);
             try {
                 const response = await fetch(`https://raw.githubusercontent.com/${user}/${repo}/main/data.json?t=${Date.now()}`);
                 if (!response.ok) throw new Error('Kunde inte hitta data.json');
@@ -273,13 +271,12 @@
                 if (cloudData && Array.isArray(cloudData.teams)) {
                     appData = cloudData;
                     saveData();
+                    refreshUI();
                     if (!silent) showStatus('✅ Synkad med molnet!', false);
                 }
             } catch (err) {
-                if (!silent) showStatus('Kunde inte nå molnet, laddar lokalt.', true);
-                loadLocalFallback();
+                if (!silent) showStatus('Kunde inte nå molnet.', true);
             }
-            refreshUI();
         }
 
         function loadLocalFallback() {
@@ -298,14 +295,13 @@
             const token = localStorage.getItem('gh_token');
 
             if (!user || !repo || !token) {
-                showStatus('❌ Saknar GitHub-inställningar eller Token!', true);
+                showStatus('❌ Fyll i dina GitHub-inställningar först!', true);
                 switchTab('settings', null);
                 return;
             }
 
-            showStatus('Sparar till GitHub...', false);
+            showStatus('Sparar till molnet...', false);
             try {
-                // 1. Hämta filens nuvarande SHA (krävs av GitHub API för uppdatering)
                 const getRes = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/data.json`, {
                     headers: { 'Authorization': `token ${token}` }
                 });
@@ -316,7 +312,6 @@
                     sha = fileData.sha;
                 }
 
-                // 2. Skicka nya datan
                 const contentEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(appData, null, 2))));
                 const putRes = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/data.json`, {
                     method: 'PUT',
@@ -325,7 +320,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        message: "Uppdaterar taktik och lag via webbapp",
+                        message: "Uppdaterar taktik via webbapp",
                         content: contentEncoded,
                         sha: sha
                     })
@@ -333,10 +328,10 @@
 
                 if (putRes.ok) {
                     saveData();
-                    showStatus('✅ Sparat och synkat till GitHub!', false);
+                    showStatus('✅ Sparat till molnet!', false);
                 } else {
                     const errJson = await putRes.json();
-                    throw new Error(errJson.message || 'Okänt GitHub-fel');
+                    throw new Error(errJson.message || 'Fel vid sparning');
                 }
             } catch (err) {
                 showStatus('❌ Gick inte att spara: ' + err.message, true);
@@ -377,7 +372,7 @@
             document.getElementById('new-team-name').value = '';
             renderTeamSelects();
             selectTeam(newTeam.id);
-            uploadToGitHub(); // Synka direkt
+            uploadToGitHub();
         }
 
         function editTeamName() {
@@ -687,7 +682,7 @@
 
                 saveData();
                 renderBoard();
-                uploadToGitHub(); // Synka till molnet när man flyttat en spelare
+                uploadToGitHub();
             }
 
             function drag(e) {

@@ -82,7 +82,7 @@
                 <button class="tab-btn active" onclick="switchTab('teams', event)">Lag</button>
                 <button class="tab-btn" onclick="switchTab('matches', event)">Matcher</button>
                 <button class="tab-btn" onclick="switchTab('tactics', event)">Taktik</button>
-                <button class="tab-btn" onclick="switchTab('settings', event)">Moln / GitHub</button>
+                <button class="tab-btn" onclick="switchTab('settings', event)">Molnstatus</button>
             </div>
 
             <div id="tab-teams" class="tab-content active">
@@ -167,26 +167,11 @@
             </div>
 
             <div id="tab-settings" class="tab-content">
-                <h2>GitHub Molnsynk</h2>
-                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Fyll i dina GitHub-uppgifter nedan en gång. Då sparas allt i samma fil för alla som använder appen!</p>
-                
-                <div class="form-group">
-                    <label>GitHub Användarnamn:</label>
-                    <input type="text" id="gh-user" placeholder="Ditt GitHub-användarnamn">
-                </div>
-                <div class="form-group">
-                    <label>Repository Namn:</label>
-                    <input type="text" id="gh-repo" placeholder="Ex. fotbollsapp">
-                </div>
-                <div class="form-group">
-                    <label>Personal Access Token (ghp_...):</label>
-                    <input type="password" id="gh-token" placeholder="Klistra in din token här">
-                </div>
-
-                <button class="btn-primary" onclick="saveGitHubSettings()">Spara inställningar</button>
+                <h2>Molnstatus</h2>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Appen synkar automatiskt mot ditt GitHub-repository i bakgrunden. Inga inställningar behövs!</p>
                 
                 <div class="btn-group" style="margin-top: 10px;">
-                    <button class="btn-secondary" style="flex:1" onclick="fetchFromGitHub()">☁️ Hämta från molnet</button>
+                    <button class="btn-secondary" style="flex:1" onclick="fetchFromGitHub(false)">☁️ Hämta från molnet</button>
                     <button class="btn-success" style="flex:1" onclick="uploadToGitHub()">💾 Spara till molnet</button>
                 </div>
 
@@ -220,6 +205,15 @@
     </div>
 
     <script>
+        // ==========================================
+        // BYT UT DESSA MED DINA FAKTISKA UPPGIFTER:
+        // ==========================================
+        const HARDCODED_CONFIG = {
+            user: "bo1cjek",
+            repo: "FotbollstranarenFotbollstranaren",
+            token: "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" // Ex. ghp_xxxx...
+        };
+
         const DEFAULT_DATA = { teams: [], matches: [] };
         let appData = { teams: [], matches: [] };
         let currentTeamId = null;
@@ -235,7 +229,6 @@
         };
 
         window.onload = function() {
-            loadGitHubSettingsToUI();
             fetchFromGitHub(true); // Hämtar automatiskt vid start
         };
 
@@ -243,28 +236,10 @@
             localStorage.setItem('fotbollApp_data', JSON.stringify(appData)); 
         }
 
-        function loadGitHubSettingsToUI() {
-            document.getElementById('gh-user').value = localStorage.getItem('gh_user') || '';
-            document.getElementById('gh-repo').value = localStorage.getItem('gh_repo') || '';
-            document.getElementById('gh-token').value = localStorage.getItem('gh_token') || '';
-        }
-
-        function saveGitHubSettings() {
-            localStorage.setItem('gh_user', document.getElementById('gh-user').value.trim());
-            localStorage.setItem('gh_repo', document.getElementById('gh-repo').value.trim());
-            localStorage.setItem('gh_token', document.getElementById('gh-token').value.trim());
-            showStatus('✅ GitHub-inställningar sparade lokalt!', false);
-        }
-
         async function fetchFromGitHub(silent = false) {
-            const user = localStorage.getItem('gh_user');
-            const repo = localStorage.getItem('gh_repo');
-            if (!user || !repo) {
-                if (!silent) showStatus('⚠️ Fyll i användarnamn och repository under inställningar.', true);
-                loadLocalFallback();
-                return;
-            }
-
+            const user = HARDCODED_CONFIG.user;
+            const repo = HARDCODED_CONFIG.repo;
+            
             if (!silent) showStatus('Hämtar data från GitHub...', false);
             try {
                 const response = await fetch(`https://raw.githubusercontent.com/${user}/${repo}/main/data.json?t=${Date.now()}`);
@@ -293,15 +268,9 @@
         }
 
         async function uploadToGitHub() {
-            const user = localStorage.getItem('gh_user');
-            const repo = localStorage.getItem('gh_repo');
-            const token = localStorage.getItem('gh_token');
-
-            if (!user || !repo || !token) {
-                showStatus('❌ Saknar GitHub-inställningar eller Token!', true);
-                switchTab('settings', null);
-                return;
-            }
+            const user = HARDCODED_CONFIG.user;
+            const repo = HARDCODED_CONFIG.repo;
+            const token = HARDCODED_CONFIG.token;
 
             showStatus('Sparar till GitHub...', false);
             try {

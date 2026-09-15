@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Fotbollstränaren v7.0</title>
+    <title>Fotbollstränaren v7.1</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -38,9 +38,9 @@
         .btn-group { display: flex; gap: 6px; }
         .list-item { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; }
         .list-item.selected { border-color: #0284c7; background: #f0f9ff; }
-        .status-msg { font-size: 0.85rem; font-weight: bold; margin-top: 8px; padding: 8px; border-radius: 4px; text-align: center; }
-        .status-success { background: #dcfce7; color: #166534; }
-        .status-error { background: #fee2e2; color: #991b1b; }
+        
+        /* Diskret statusindikator */
+        #sync-status { font-size: 0.75rem; color: #94a3b8; text-align: center; padding: 4px; background: #1e293b; }
 
         #main-area { flex: 1; display: flex; flex-direction: column; background: #0f172a; position: relative; overflow: hidden; }
         #match-header { background: #1e293b; color: #ffffff; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
@@ -81,8 +81,8 @@
                 <button class="tab-btn active" onclick="switchTab('teams', event)">Lag</button>
                 <button class="tab-btn" onclick="switchTab('matches', event)">Matcher</button>
                 <button class="tab-btn" onclick="switchTab('tactics', event)">Taktik</button>
-                <button class="tab-btn" onclick="switchTab('sync', event)">Moln</button>
             </div>
+            <div id="sync-status">Ansluter till moln...</div>
 
             <div id="tab-teams" class="tab-content active">
                 <h2>Mina Lag</h2>
@@ -164,14 +164,6 @@
                     <div id="match-squad-checklist"></div>
                 </div>
             </div>
-
-            <div id="tab-sync" class="tab-content">
-                <h2>Molnsynk</h2>
-                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Appen synkar automatiskt mot det gemensamma molnet.</p>
-                <button class="btn-primary" onclick="loadFromCloud()">☁️ Hämta senaste från molnet</button>
-                <button class="btn-success" onclick="saveToCloud()" style="margin-top:10px;">💾 Spara till molnet nu</button>
-                <div id="global-status" class="status-msg" style="display:none;"></div>
-            </div>
         </div>
 
         <div id="main-area">
@@ -180,7 +172,6 @@
                     <div id="display-match-title">Ingen match vald</div>
                     <span id="display-match-info">Välj eller skapa en match i menyn</span>
                 </div>
-                <button class="btn-success" style="width: auto; padding: 6px 12px; font-size: 0.85rem;" onclick="saveToCloud()">💾 Spara till molnet</button>
             </div>
 
             <div id="pitch-container">
@@ -200,14 +191,13 @@
     </div>
 
     <script>
-        // Ett fast, öppet moln-ID för ert lag
-        const CLOUD_URL = 'https://api.jsonbin.io/v3/b/65f123456789...'; // Ersätts eller hanteras via npoint om vi kör öppet
-        // Vi kör npoint.io för helt öppen, enkel lagring utan API-nycklar:
-        const OPEN_BIN_URL = 'https://api.npoint.io/fotbollstranaren_shared_data_v1';
+        // Delad öppen moln-endpoint för automatisk synk
+        const CLOUD_URL = 'https://api.npoint.io/d47c94318c6753065d0b';
 
         let appData = { teams: [], matches: [] };
         let currentTeamId = null;
         let currentMatchId = null;
+        let isSaving = false;
 
         const FORMATION_PRESETS = {
             "2-3-1": [ {x: 8, y: 50}, {x: 22, y: 30}, {x: 22, y: 70}, {x: 48, y: 20}, {x: 48, y: 50}, {x: 48, y: 80}, {x: 78, y: 50} ],
@@ -219,51 +209,50 @@
         };
 
         window.onload = function() {
-            loadFromCloud(true);
+            loadFromCloud();
+            // Synka automatiskt var 10:e sekund så kollegans ändringar dyker upp
+            setInterval(loadFromCloud, 10000);
         };
 
-        function showStatus(text, isError = false) {
-            const statusDiv = document.getElementById('global-status');
-            if(!statusDiv) return;
-            statusDiv.style.display = 'block';
-            statusDiv.className = 'status-msg ' + (isError ? 'status-error' : 'status-success');
-            statusDiv.innerText = text;
-            setTimeout(() => { statusDiv.style.display = 'none'; }, 4000);
+        function updateStatus(text, color = '#94a3b8') {
+            const el = document.getElementById('sync-status');
+            if(el) {
+                el.innerText = text;
+                el.style.color = color;
+            }
         }
 
-        async function loadFromCloud(silent = false) {
-            if(!silent) showStatus('Hämtar från molnet...');
+        async function loadFromCloud() {
             try {
-                // Vi använder localStorage som backup om nätverk saknas tillfälligt
-                const res = await fetch('https://api.npoint.io/d47c94318c6753065d0b'); // Exempel-endpoint, vi sparar lokalt tillsvidare om den inte finns
+                const res = await fetch(CLOUD_URL);
                 if (res.ok) {
-                    appData = await res.json();
-                } else {
-                    throw new Error();
+                    const data = await res.json();
+                    if(data && data.teams) {
+                        appData = data;
+                        refreshUI();
+                        updateStatus('☁️ Synkat med molnet', '#4ade80');
+                    }
                 }
             } catch(e) {
-                const local = localStorage.getItem('fotbollApp_fallback');
-                if(local) appData = JSON.parse(local);
+                updateStatus('⚠️ Offline (visar lokalt)', '#f87171');
             }
-            refreshUI();
-            if(!silent) showStatus('✅ Uppdaterat från molnet!');
         }
 
         async function saveToCloud() {
-            showStatus('Sparar till molnet...');
-            localStorage.setItem('fotbollApp_fallback', JSON.stringify(appData));
-            
+            if (isSaving) return;
+            isSaving = true;
+            updateStatus('Sparar till molnet...', '#facc15');
             try {
-                // Skickar till öppen molnlagring
-                await fetch('https://api.npoint.io/d47c94318c6753065d0b', {
-                    method: 'POST',
+                await fetch(CLOUD_URL, {
+                    method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(appData)
                 });
-                showStatus('✅ Sparat till molnet!');
+                updateStatus('☁️ Sparat i molnet', '#4ade80');
             } catch(e) {
-                showStatus('✅ Sparat (lokal backup aktiv).');
+                updateStatus('❌ Kunde inte spara', '#f87171');
             }
+            isSaving = false;
         }
 
         function switchTab(tabName, event) {

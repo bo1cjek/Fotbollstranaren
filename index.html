@@ -2,223 +2,381 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Fotbollstränaren v6.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fotbollstränaren</title>
     <style>
         :root {
-            --pitch-green: #2e7d32;
-            --pitch-line: rgba(255, 255, 255, 0.85);
-            --primary: #1976d2;
-            --danger: #d32f2f;
-            --dark: #1e293b;
-            --border-color: #cbd5e1;
-            --success: #16a34a;
+            --primary-color: #1b4332;
+            --secondary-color: #2d6a4f;
+            --accent-color: #52b788;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --border-color: #dee2e6;
+            --danger-color: #dc3545;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; touch-action: manipulation; }
-        body { background-color: #0f172a; color: var(--dark); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        #app-container { display: flex; flex: 1; width: 100%; height: 100%; overflow: hidden; }
-        #sidebar { width: 380px; background: #ffffff; border-right: 2px solid #e2e8f0; display: flex; flex-direction: column; z-index: 10; }
-        .tabs { display: flex; background: #1e293b; overflow-x: auto; }
-        .tab-btn { flex: 1; padding: 12px 6px; border: none; background: none; color: #94a3b8; font-weight: 600; font-size: 0.8rem; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
-        .tab-btn.active { color: #ffffff; background: #334155; border-bottom: 3px solid #38bdf8; }
-        .tab-content { display: none; padding: 16px; overflow-y: auto; flex: 1; }
-        .tab-content.active { display: block; }
-        h2 { font-size: 1.2rem; margin-bottom: 12px; color: #0f172a; }
-        h3 { font-size: 1.05rem; margin-bottom: 10px; color: #1e293b; }
-        .form-group { margin-bottom: 12px; }
-        label { display: block; margin-bottom: 4px; font-size: 0.85rem; font-weight: 600; color: #475569; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; }
-        
-        button.btn-primary { background: var(--primary); color: white; border: none; font-weight: 600; padding: 12px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 6px; }
-        button.btn-success { background: var(--success); color: white; border: none; font-weight: 600; padding: 12px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 6px; }
-        button.btn-secondary { background: #e2e8f0; color: #334155; border: 1px solid #cbd5e1; padding: 8px; border-radius: 4px; font-weight: 600; }
-        button.btn-danger { background: #fee2e2; color: var(--danger); border: 1px solid #fca5a5; padding: 6px; border-radius: 4px; font-weight: 600; }
-        
-        .btn-group { display: flex; gap: 6px; }
-        .data-box { background: #f1f5f9; border: 1px dashed #cbd5e1; padding: 12px; border-radius: 8px; margin-bottom: 16px; }
-        .list-item { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; }
-        .list-item.selected { border-color: #0284c7; background: #f0f9ff; }
-        .status-msg { font-size: 0.85rem; font-weight: bold; margin-top: 8px; padding: 8px; border-radius: 4px; text-align: center; word-break: break-all; }
-        .status-success { background: #dcfce7; color: #166534; }
-        .status-error { background: #fee2e2; color: #991b1b; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
 
-        #main-area { flex: 1; display: flex; flex-direction: column; background: #0f172a; position: relative; overflow: hidden; }
-        #match-header { background: #1e293b; color: #ffffff; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
-        #display-match-title { color: #38bdf8; font-size: 1.1rem; font-weight: 700; }
-        #display-match-info { font-size: 0.85rem; color: #cbd5e1; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            padding-bottom: 40px;
+        }
 
-        #pitch-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 10px; position: relative; }
-        .pitch { width: 100%; height: 100%; max-width: 900px; max-height: 600px; background-color: var(--pitch-green); border: 3px solid var(--pitch-line); border-radius: 8px; position: relative; overflow: hidden; }
-        .pitch-line-center { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: var(--pitch-line); transform: translateX(-50%); }
-        .pitch-circle-center { position: absolute; top: 50%; left: 50%; width: 80px; height: 80px; border: 2px solid var(--pitch-line); border-radius: 50%; transform: translate(-50%, -50%); }
-        .penalty-area { position: absolute; top: 20%; bottom: 20%; width: 18%; border: 2px solid var(--pitch-line); }
-        .penalty-area.left { left: 0; border-left: none; }
-        .penalty-area.right { right: 0; border-right: none; }
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-        #bench-area { height: 110px; background: #1e293b; border-top: 2px solid #334155; padding: 8px 12px; display: flex; flex-direction: column; }
-        #bench-area h4 { color: #94a3b8; margin-bottom: 6px; font-size: 0.75em; text-transform: uppercase; }
-        .bench-slots { display: flex; gap: 12px; overflow-x: auto; flex: 1; align-items: center; }
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.1rem;
+        }
 
-        .player-pin { width: 42px; height: 42px; background: #ef4444; color: white; border: 2px solid white; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; font-size: 0.75em; cursor: grab; position: absolute; transform: translate(-50%, -50%); user-select: none; z-index: 20; touch-action: none; }
-        .player-pin.on-bench { position: relative; transform: none; flex-shrink: 0; top: auto !important; left: auto !important; }
-        .player-pin .number { font-size: 0.9em; line-height: 1; font-weight: 800; }
-        .player-pin .name { font-size: 0.65em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 38px; text-align: center; }
+        .container {
+            max-width: 900px;
+            margin: 15px auto;
+            padding: 0 10px;
+        }
 
-        @media (max-width: 768px) {
-            #app-container { flex-direction: column; }
-            #sidebar { width: 100%; height: 45vh; border-right: none; }
-            #main-area { height: 55vh; }
-            .player-pin { width: 38px; height: 38px; }
-            #bench-area { height: 95px; }
+        .status-msg {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            text-align: center;
+            display: none;
+        }
+        .status-success { background-color: #d1e7dd; color: #0f5132; }
+        .status-error { background-color: #f8d7da; color: #842029; }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            background: #e9ecef;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--card-bg);
+            color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        button.primary-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        button.primary-btn:hover { background-color: var(--primary-color); }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            background: #fff;
+        }
+        .list-item.selected {
+            border-color: var(--accent-color);
+            background: #f0fdf4;
+        }
+
+        .pitch-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            background: #2d6a4f;
+            border: 3px solid white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        .pitch-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.6);
+        }
+        .pitch-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border: 2px solid rgba(255,255,255,0.6);
+            border-radius: 50%;
+        }
+
+        .player-pin {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            background: #ffffff;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: translate(-50%, -50%);
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            z-index: 10;
+            font-size: 0.7rem;
+            text-align: center;
+        }
+        .player-pin.dragging { cursor: grabbing; opacity: 0.8; z-index: 100; }
+        .player-pin .number { font-weight: bold; font-size: 0.75rem; line-height: 1; }
+        .player-pin .name { font-size: 0.6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 40px; }
+
+        .bench-area {
+            background: #e9ecef;
+            border: 2px dashed #adb5bd;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 15px;
+            min-height: 80px;
+        }
+        .bench-slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .player-pin.on-bench {
+            position: relative;
+            transform: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="app-container">
-        <div id="sidebar">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('teams', event)">Lag</button>
-                <button class="tab-btn" onclick="switchTab('matches', event)">Matcher</button>
-                <button class="tab-btn" onclick="switchTab('tactics', event)">Taktik</button>
-                <button class="tab-btn" onclick="switchTab('settings', event)">Moln / GitHub</button>
-            </div>
+    <header>
+        <h1>⚽ Fotbollstränaren</h1>
+        <p>Taktik & Laghantering</p>
+    </header>
 
-            <div id="tab-teams" class="tab-content active">
-                <h2>Mina Lag</h2>
+    <div class="container">
+        <div id="global-status" class="status-msg"></div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('teams', event)">Lag & Spelare</button>
+            <button class="tab-btn" onclick="switchTab('matches', event)">Matcher & Taktik</button>
+            <button class="tab-btn" onclick="switchTab('settings', event)">GitHub-inställningar</button>
+        </div>
+
+        <!-- TAB 1: LAG & SPELARE -->
+        <div id="tab-teams" class="tab-content active">
+            <div class="card">
+                <h2>Hantera Lag</h2>
                 <div class="form-group">
-                    <label for="new-team-name">Skapa nytt lag:</label>
-                    <input type="text" id="new-team-name" placeholder="Ex. F012">
-                    <button class="btn-primary" onclick="createTeam()">Skapa Lag</button>
+                    <label for="new-team-name">Nytt lagnamn:</label>
+                    <input type="text" id="new-team-name" placeholder="T.ex. P12 Svart">
+                </div>
+                <button class="primary-btn" onclick="createTeam()">Skapa Lag</button>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="team-select">Välj befintligt lag:</label>
+                    <select id="team-select" onchange="selectTeam()"></select>
                 </div>
                 
-                <div class="form-group">
-                    <label for="team-select">Välj aktivt lag:</label>
-                    <select id="team-select" onchange="selectTeam()"></select>
-                    <div class="btn-group" id="team-controls" style="margin-top: 8px; display: none;">
-                        <button class="btn-secondary" style="flex:1" onclick="editTeamName()">Byt namn</button>
-                        <button class="btn-danger" onclick="deleteTeam()">Radera</button>
-                    </div>
-                </div>
-
-                <hr style="margin: 15px 0; border: none; border-top: 1px solid #e2e8f0;">
-
-                <div id="player-section" style="display:none;">
-                    <h3>Spelare i <span id="current-team-title"></span></h3>
-                    <div class="form-group"><input type="text" id="player-name" placeholder="Spelarens namn"></div>
-                    <div class="form-group">
-                        <input type="number" id="player-number" placeholder="Tröjnummer">
-                        <button class="btn-primary" onclick="addPlayer()">Lägg till spelare</button>
-                    </div>
-                    <div id="player-list"></div>
+                <div id="team-controls" style="display:none; gap: 8px; margin-top: 10px;">
+                    <button class="primary-btn" onclick="editTeamName()" style="background-color: #6c757d;">Ändra lagnamn</button>
+                    <button class="btn-danger" onclick="deleteTeam()" style="width:100%; margin-top:5px;">Radera lag</button>
                 </div>
             </div>
 
-            <div id="tab-matches" class="tab-content">
-                <h2>Matcher</h2>
+            <div class="card" id="player-section" style="display:none;">
+                <h2 id="current-team-title">Spelare</h2>
                 <div class="form-group">
-                    <label for="match-team-select">Välj Mitt Lag:</label>
+                    <label>Lägg till spelare:</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="player-number" placeholder="#" style="width: 70px;">
+                        <input type="text" id="player-name" placeholder="Spelarens namn">
+                    </div>
+                </div>
+                <button class="primary-btn" onclick="addPlayer()">Lägg till spelare</button>
+                
+                <div style="margin-top: 15px;" id="player-list"></div>
+            </div>
+        </div>
+
+        <!-- TAB 2: MATCHER & TAKTIK -->
+        <div id="tab-matches" class="tab-content">
+            <div class="card">
+                <h2>Skapa / Välj Match</h2>
+                <div class="form-group">
+                    <label for="match-team-select">Lag:</label>
                     <select id="match-team-select"></select>
                 </div>
                 <div class="form-group">
                     <label for="match-opponent">Motståndare:</label>
-                    <input type="text" id="match-opponent" placeholder="Ex. Rävåsens IK">
+                    <input type="text" id="match-opponent" placeholder="T.ex. IFK Bäcken">
                 </div>
                 <div class="form-group">
                     <label for="match-type">Spelform:</label>
                     <select id="match-type">
-                        <option value="7">7-manna</option>
+                        <option value="5">5-manna</option>
+                        <option value="7" selected>7-manna</option>
                         <option value="9">9-manna</option>
                         <option value="11">11-manna</option>
                     </select>
                 </div>
-                <button class="btn-primary" onclick="createMatch()">Skapa ny match</button>
-                <hr style="margin: 15px 0; border: none; border-top: 1px solid #e2e8f0;">
-                <h3>Sparade Matcher</h3>
-                <div id="match-list"></div>
+                <button class="primary-btn" onclick="createMatch()">Skapa Match</button>
+
+                <div style="margin-top: 15px;" id="match-list"></div>
             </div>
 
-            <div id="tab-tactics" class="tab-content">
-                <h2>Formation & Taktik</h2>
+            <div class="card" id="match-board-card">
+                <h2 id="display-match-title">Välj en match ovan</h2>
+                <p id="display-match-info" style="font-size:0.85rem; color:#6c757d; margin-bottom: 10px;"></p>
+
                 <div class="form-group">
-                    <label for="formation-select">Formation:</label>
+                    <label for="formation-select">Formation / Uppställning:</label>
                     <select id="formation-select" onchange="applyFormation()">
-                        <option value="custom">-- Egen Formation --</option>
-                        <optgroup label="7-manna">
-                            <option value="2-3-1">2-3-1</option>
-                            <option value="3-2-1">3-2-1</option>
-                        </optgroup>
-                        <optgroup label="9-manna">
-                            <option value="3-3-2">3-3-2</option>
-                            <option value="3-4-1">3-4-1</option>
-                        </optgroup>
-                        <optgroup label="11-manna">
-                            <option value="4-4-2">4-4-2</option>
-                            <option value="4-3-3">4-3-3</option>
-                        </optgroup>
+                        <option value="custom">Fri placering</option>
+                        <option value="2-3-1">2-3-1 (7-manna)</option>
+                        <option value="3-2-1">3-2-1 (7-manna)</option>
+                        <option value="3-3-2">3-3-2 (9-manna)</option>
+                        <option value="3-4-1">3-4-1 (9-manna)</option>
+                        <option value="4-4-2">4-4-2 (11-manna)</option>
+                        <option value="4-3-3">4-3-3 (11-manna)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Spelare i truppen:</label>
-                    <div id="match-squad-checklist"></div>
-                </div>
-            </div>
-
-            <div id="tab-settings" class="tab-content">
-                <h2>GitHub Molnsynk</h2>
-                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Fyll i dina GitHub-uppgifter nedan för att synka mot molnet.</p>
-                
-                <div class="form-group">
-                    <label>GitHub Användarnamn:</label>
-                    <input type="text" id="gh-user" placeholder="Ditt användarnamn">
-                </div>
-                <div class="form-group">
-                    <label>Repository Namn:</label>
-                    <input type="text" id="gh-repo" placeholder="Ex. Fotbollstranaren">
-                </div>
-                <div class="form-group">
-                    <label>Personal Access Token (ghp_...):</label>
-                    <input type="password" id="gh-token" placeholder="Klistra in din token här">
+                    <label>Matchtrupp (Kryssa i spelare som är med):</label>
+                    <div id="match-squad-checklist" style="max-height: 120px; overflow-y:auto; border:1px solid var(--border-color); padding:8px; border-radius:6px; background:#fafafa;"></div>
                 </div>
 
-                <button class="btn-primary" onclick="saveGitHubSettings()">Spara inställningar</button>
-                
-                <div class="btn-group" style="margin-top: 10px;">
-                    <button class="btn-secondary" style="flex:1" onclick="fetchFromGitHub()">☁️ Hämta från molnet</button>
-                    <button class="btn-success" style="flex:1" onclick="uploadToGitHub()">💾 Spara till molnet</button>
-                </div>
+                <label style="margin-top: 15px;">Taktiktavla (Dra spelare till positioner):</label>
+                <div class="pitch-container" id="pitch"></div>
 
-                <div id="global-status" class="status-msg" style="display:none;"></div>
+                <div class="bench-area" id="bench-area">
+                    <label style="margin-bottom: 5px; font-weight:bold;">Avbytare / Utanför plan:</label>
+                    <div class="bench-slots" id="bench-slots"></div>
+                </div>
             </div>
         </div>
 
-        <div id="main-area">
-            <div id="match-header">
-                <div>
-                    <div id="display-match-title">Ingen match vald</div>
-                    <span id="display-match-info">Välj/skapa en match i menyn</span>
+        <!-- TAB 3: INSTÄLLNINGAR -->
+        <div id="tab-settings" class="tab-content">
+            <div class="card">
+                <h2>GitHub-koppling</h2>
+                <p style="font-size: 0.85rem; color: #6c757d; margin-bottom: 15px;">
+                    Appen sparar och hämtar data automatiskt från ditt GitHub-repository.
+                </p>
+                <div class="form-group">
+                    <label for="gh-user">GitHub Användarnamn:</label>
+                    <input type="text" id="gh-user">
                 </div>
-                <button class="btn-success" style="width: auto; padding: 6px 12px; font-size: 0.85rem;" onclick="uploadToGitHub()">💾 Spara till molnet</button>
-            </div>
-
-            <div id="pitch-container">
-                <div class="pitch" id="pitch">
-                    <div class="penalty-area left"></div>
-                    <div class="penalty-area right"></div>
-                    <div class="pitch-line-center"></div>
-                    <div class="pitch-circle-center"></div>
+                <div class="form-group">
+                    <label for="gh-repo">Repository-namn:</label>
+                    <input type="text" id="gh-repo">
                 </div>
-            </div>
-
-            <div id="bench-area">
-                <h4>Avbytarbänk</h4>
-                <div class="bench-slots" id="bench-slots"></div>
+                <div class="form-group">
+                    <label for="gh-token">GitHub Personal Access Token (PAT):</label>
+                    <input type="password" id="gh-token" placeholder="ghp_...">
+                </div>
+                <button class="primary-btn" onclick="saveGitHubSettings()" style="background-color: var(--accent-color);">💾 Spara Inställningar</button>
             </div>
         </div>
     </div>
 
+    <!-- JavaScript -->
     <script>
         const DEFAULT_DATA = { teams: [], matches: [] };
         let appData = { teams: [], matches: [] };
@@ -236,9 +394,9 @@
 
         window.onload = function() {
             loadGitHubSettingsToUI();
-            loadLocalFallback(); // Starta alltid upp direkt lokalt
+            loadLocalFallback(); 
             refreshUI();
-            fetchFromGitHub(true); // Försök hämta molndata i bakgrunden
+            fetchFromGitHub(true); 
         };
 
         function saveData() { 
@@ -526,9 +684,8 @@
             currentMatchId = matchId;
             renderMatchList();
             const match = appData.matches.find(m => m.id === matchId);
-            const team = appData.teams.find(t => t.id === match.teamId);
-
             if (!match) return;
+            const team = appData.teams.find(t => t.id === match.teamId);
 
             document.getElementById('display-match-title').innerText = `${team ? team.name : ''} vs ${match.opponent}`;
             document.getElementById('display-match-info').innerText = `${match.type}-manna`;

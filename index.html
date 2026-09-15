@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Fotbollstränaren v7.2</title>
+    <title>Fotbollstränaren v7.3</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -190,7 +190,7 @@
     </div>
 
     <script>
-        // BYT UT DENNA LÄNK mot din egen från npoint.io!
+        // Kopplad till din npoint-länk:
         const CLOUD_URL = 'https://api.npoint.io/011de991c224ccd6ebc6';
 
         let appData = { teams: [], matches: [] };
@@ -594,7 +594,6 @@
                 let clientX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX);
                 let clientY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY);
 
-                const match = appData.matches.matches.find(m => m.id === currentMatchId); // fix reference below
                 const currentMatch = appData.matches.find(m => m.id === currentMatchId);
                 if (!currentMatch) return;
 

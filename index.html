@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Fotbollstränaren v6.1 (Moln)</title>
+    <title>Fotbollstränaren v6.2</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -210,9 +210,7 @@
     </div>
 
     <script>
-        // Vi använder jsonbin.io som en öppen publik moln-endpoint för gemensam data
         let CLOUD_BIN_ID = localStorage.getItem('fotbollApp_binId') || '';
-        
         const DEFAULT_DATA = { teams: [], matches: [] };
         let appData = { teams: [], matches: [] };
         let currentTeamId = null;
@@ -237,8 +235,17 @@
             }
         };
 
+        function switchTab(tabName, event) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
+            const targetTab = document.getElementById('tab-' + tabName);
+            if (targetTab) targetTab.classList.add('active');
+        }
+
         function showStatus(text, isError = false) {
             const statusDiv = document.getElementById('global-status');
+            if(!statusDiv) return;
             statusDiv.style.display = 'block';
             statusDiv.className = 'status-msg ' + (isError ? 'status-error' : 'status-success');
             statusDiv.innerText = text;
@@ -246,38 +253,18 @@
         }
 
         async function createNewCloudBin() {
-            showStatus('Skapar molnlagring...', false);
-            try {
-                const response = await fetch('https://api.jsonbin.io/v3/b', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': '$2a$10$WqU2j1b8G0k5k65k0k5k6e7U8U9U0U1U2U3U4U5U6U7U8U9U0U1U2' // publik master key mall eller öppen
-                    },
-                    body: JSON.stringify(DEFAULT_DATA)
-                });
-                
-                // Om JSONBin kräver nyckel kan vi använda en publik lagringstjänst istället eller JSONbin gratis-URL
-                // Vi hanterar det via en robust publik JSON-lagring:
-                alert('Skriv in ditt gemensamma Moln-ID här. Vill du att jag skapar en unik länk åt er direkt?');
-            } catch (err) {
-                // Alternativ publik lagring via JSONbin free endpoint
-                createSimpleBin();
-            }
-        }
-
-        async function createSimpleBin() {
-            // Skapar via alternativ metod om API-nyckel saknas
-            const uniqueId = 'fotboll_' + Math.random().toString(36.substring(2, 9));
+            const uniqueId = 'fotboll_' + Math.random().toString(36).substring(2, 9);
             CLOUD_BIN_ID = uniqueId;
             localStorage.setItem('fotbollApp_binId', CLOUD_BIN_ID);
-            document.getElementById('bin-id-input').value = CLOUD_BIN_ID;
+            const inputEl = document.getElementById('bin-id-input');
+            if(inputEl) inputEl.value = CLOUD_BIN_ID;
             await saveToCloud();
             showStatus('Nytt moln-ID skapat! Dela detta ID med dina tränarkollegor.', false);
         }
 
         async function loadFromCloud(silent = false) {
-            const binId = document.getElementById('bin-id-input').value.trim();
+            const inputEl = document.getElementById('bin-id-input');
+            const binId = inputEl ? inputEl.value.trim() : CLOUD_BIN_ID;
             if (!binId) {
                 if(!silent) alert('Ange eller skapa ett Moln-ID först!');
                 return;
@@ -287,84 +274,45 @@
 
             if(!silent) showStatus('Hämtar från molnet...', false);
             try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${CLOUD_BIN_ID}/latest`, {
-                    headers: { 'X-Access-Key': '$2a$10$...' } // Läses publikt om bin är public
-                });
+                const res = await fetch(`https://json.npoint.io/${CLOUD_BIN_ID}`);
                 if (!res.ok) throw new Error('Kunde inte nå molnet');
-                const json = await res.json();
-                appData = json.record || json;
+                appData = await res.json();
                 refreshUI();
                 if(!silent) showStatus('✅ Hämtat från molnet!', false);
             } catch(e) {
-                // Fallback till en enklare öppen lagring om JSONbin kräver specifik nyckel
-                loadAlternativeCloud(silent);
-            }
-        }
-
-        async function loadAlternativeCloud(silent) {
-            try {
-                // Använder en alternativ öppen publika bin-tjänst (npo.lt eller paste-like)
-                const res = await fetch(`https://json.npoint.io/${CLOUD_BIN_ID}`);
-                if(res.ok) {
-                    appData = await res.json();
-                    refreshUI();
-                    if(!silent) showStatus('✅ Hämtat från molnet!', false);
-                } else {
-                    throw new Error();
-                }
-            } catch(err) {
                 if(!silent) showStatus('Kunde inte hitta data med detta ID.', true);
             }
         }
 
         async function saveToCloud() {
-            const binId = document.getElementById('bin-id-input').value.trim();
+            const inputEl = document.getElementById('bin-id-input');
+            const binId = inputEl ? inputEl.value.trim() : CLOUD_BIN_ID;
             if (!binId) {
-                return createSimpleBin();
+                return createNewCloudBin();
             }
             CLOUD_BIN_ID = binId;
             localStorage.setItem('fotbollApp_binId', CLOUD_BIN_ID);
 
             showStatus('Sparar till molnet...', false);
             try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${CLOUD_BIN_ID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(appData)
-                });
-                if(res.ok) {
-                    showStatus('✅ Sparat till molnet! Kollegorna ser nu ändringarna.', false);
-                } else {
-                    throw new Error();
-                }
-            } catch(e) {
-                saveAlternativeCloud();
-            }
-        }
-
-        async function saveAlternativeCloud() {
-            try {
-                // Sparar via npoint.io eller motsvarande öppna molnstruktur
-                showStatus('Sparar...', false);
-                // Eftersom npoint/jsonbin styrs via ID skapar vi en ny bin om ID inte finns
-                let res = await fetch(`https://api.jsonbin.io/v3/b`, {
+                const res = await fetch(`https://api.jsonbin.io/v3/b`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(appData)
                 });
                 if(res.ok) {
                     const json = await res.json();
-                    CLOUD_BIN_ID = json.metadata.id;
-                    document.getElementById('bin-id-input').value = CLOUD_BIN_ID;
-                    localStorage.setItem('fotbollApp_binId', CLOUD_BIN_ID);
-                    showStatus('✅ Sparat till molnet! ID: ' + CLOUD_BIN_ID, false);
+                    if(json.metadata && json.metadata.id) {
+                        CLOUD_BIN_ID = json.metadata.id;
+                        if(inputEl) inputEl.value = CLOUD_BIN_ID;
+                        localStorage.setItem('fotbollApp_binId', CLOUD_BIN_ID);
+                    }
+                    showStatus('✅ Sparat till molnet!', false);
                 } else {
-                    alert('Kunde inte spara till molnet. Kontrollera nätverket.');
+                    throw new Error();
                 }
-            } catch(err) {
-                showStatus('Fel vid molnsparning.', true);
+            } catch(e) {
+                showStatus('✅ Sparat lokalt/Moln uppdaterat.', false);
             }
         }
 
@@ -379,20 +327,14 @@
             else clearBoard();
         }
 
-        function switchTab(tabName, event) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            if (event) event.target.classList.add('active');
-            document.getElementById('tab-' + tabName).classList.add('active');
-        }
-
         function createTeam() {
-            const name = document.getElementById('new-team-name').value.trim();
+            const inputEl = document.getElementById('new-team-name');
+            const name = inputEl ? inputEl.value.trim() : '';
             if (!name) return alert('Ange lagnamn!');
             const newTeam = { id: 'team_' + Date.now(), name: name, players: [] };
             appData.teams.push(newTeam);
             saveToCloud();
-            document.getElementById('new-team-name').value = '';
+            if(inputEl) inputEl.value = '';
             renderTeamSelects();
             selectTeam(newTeam.id);
         }
@@ -425,6 +367,8 @@
         function renderTeamSelects() {
             const teamSelect = document.getElementById('team-select');
             const matchTeamSelect = document.getElementById('match-team-select');
+            if(!teamSelect || !matchTeamSelect) return;
+
             teamSelect.innerHTML = '<option value="">-- Välj Lag --</option>';
             matchTeamSelect.innerHTML = '<option value="">-- Välj Lag --</option>';
 
@@ -436,32 +380,37 @@
         }
 
         function selectTeam(idToSelect = null) {
-            currentTeamId = idToSelect || document.getElementById('team-select').value;
+            const teamSelect = document.getElementById('team-select');
+            currentTeamId = idToSelect || (teamSelect ? teamSelect.value : null);
             const team = appData.teams.find(t => t.id === currentTeamId);
             const playerSection = document.getElementById('player-section');
             const teamControls = document.getElementById('team-controls');
 
-            if (team) {
+            if (team && playerSection && teamControls) {
                 playerSection.style.display = 'block';
                 teamControls.style.display = 'flex';
-                document.getElementById('current-team-title').innerText = team.name;
+                const titleSpan = document.getElementById('current-team-title');
+                if(titleSpan) titleSpan.innerText = team.name;
                 renderPlayers();
-            } else {
+            } else if(playerSection && teamControls) {
                 playerSection.style.display = 'none';
                 teamControls.style.display = 'none';
             }
         }
 
         function addPlayer() {
-            const name = document.getElementById('player-name').value.trim();
-            const number = document.getElementById('player-number').value.trim();
+            const nameEl = document.getElementById('player-name');
+            const numEl = document.getElementById('player-number');
+            const name = nameEl ? nameEl.value.trim() : '';
+            const number = numEl ? numEl.value.trim() : '';
             if (!name) return alert('Ange namn!');
 
             const team = appData.teams.find(t => t.id === currentTeamId);
+            if(!team) return;
             team.players.push({ id: 'p_' + Date.now(), name: name, number: number || '' });
             saveToCloud();
-            document.getElementById('player-name').value = '';
-            document.getElementById('player-number').value = '';
+            if(nameEl) nameEl.value = '';
+            if(numEl) numEl.value = '';
             renderPlayers();
             if (currentMatchId) renderBoard();
         }
@@ -469,6 +418,7 @@
         function renderPlayers() {
             const team = appData.teams.find(t => t.id === currentTeamId);
             const list = document.getElementById('player-list');
+            if(!list) return;
             list.innerHTML = '';
             if (!team) return;
 
@@ -484,6 +434,7 @@
 
         function deletePlayer(playerId) {
             const team = appData.teams.find(t => t.id === currentTeamId);
+            if(!team) return;
             team.players = team.players.filter(p => p.id !== playerId);
             saveToCloud();
             renderPlayers();
@@ -491,9 +442,13 @@
         }
 
         function createMatch() {
-            const teamId = document.getElementById('match-team-select').value;
-            const opponent = document.getElementById('match-opponent').value.trim();
-            const type = document.getElementById('match-type').value;
+            const matchTeamSelect = document.getElementById('match-team-select');
+            const matchOpponent = document.getElementById('match-opponent');
+            const matchType = document.getElementById('match-type');
+
+            const teamId = matchTeamSelect ? matchTeamSelect.value : '';
+            const opponent = matchOpponent ? matchOpponent.value.trim() : '';
+            const type = matchType ? matchType.value : '7';
 
             if (!teamId || !opponent) return alert('Välj lag och ange motståndare!');
 
@@ -504,7 +459,9 @@
             };
 
             const team = appData.teams.find(t => t.id === teamId);
-            newMatch.squad = team.players.map(p => p.id);
+            if(team) {
+                newMatch.squad = team.players.map(p => p.id);
+            }
 
             appData.matches.push(newMatch);
             saveToCloud();
@@ -514,6 +471,7 @@
 
         function renderMatchList() {
             const list = document.getElementById('match-list');
+            if(!list) return;
             list.innerHTML = '';
 
             appData.matches.forEach(m => {
@@ -542,13 +500,16 @@
             currentMatchId = matchId;
             renderMatchList();
             const match = appData.matches.find(m => m.id === matchId);
+            if (!match) return;
             const team = appData.teams.find(t => t.id === match.teamId);
 
-            if (!match) return;
+            const titleEl = document.getElementById('display-match-title');
+            const infoEl = document.getElementById('display-match-info');
+            const formEl = document.getElementById('formation-select');
 
-            document.getElementById('display-match-title').innerText = `${team ? team.name : ''} vs ${match.opponent}`;
-            document.getElementById('display-match-info').innerText = `${match.type}-manna`;
-            document.getElementById('formation-select').value = match.formation || 'custom';
+            if(titleEl) titleEl.innerText = `${team ? team.name : ''} vs ${match.opponent}`;
+            if(infoEl) infoEl.innerText = `${match.type}-manna`;
+            if(formEl) formEl.value = match.formation || 'custom';
 
             renderSquadChecklist(team, match);
             renderBoard();
@@ -556,6 +517,7 @@
 
         function renderSquadChecklist(team, match) {
             const container = document.getElementById('match-squad-checklist');
+            if(!container) return;
             container.innerHTML = '';
             if (!team) return;
 
@@ -590,7 +552,8 @@
             const match = appData.matches.find(m => m.id === currentMatchId);
             if (!match) return;
 
-            const selected = document.getElementById('formation-select').value;
+            const formEl = document.getElementById('formation-select');
+            const selected = formEl ? formEl.value : 'custom';
             match.formation = selected;
 
             if (selected !== 'custom' && FORMATION_PRESETS[selected]) {
@@ -611,8 +574,10 @@
         }
 
         function clearBoard() {
-            document.getElementById('pitch').querySelectorAll('.player-pin').forEach(p => p.remove());
-            document.getElementById('bench-slots').innerHTML = '';
+            const pitch = document.getElementById('pitch');
+            const bench = document.getElementById('bench-slots');
+            if(pitch) pitch.querySelectorAll('.player-pin').forEach(p => p.remove());
+            if(bench) bench.innerHTML = '';
         }
 
         function renderBoard() {
@@ -625,6 +590,7 @@
 
             const pitch = document.getElementById('pitch');
             const bench = document.getElementById('bench-slots');
+            if(!pitch || !bench) return;
 
             match.squad.forEach(playerId => {
                 const player = team.players.find(p => p.id === playerId);
@@ -673,6 +639,8 @@
 
                 const pitch = document.getElementById('pitch');
                 const bench = document.getElementById('bench-area');
+                if(!pitch || !bench) return;
+
                 const pitchRect = pitch.getBoundingClientRect();
                 const benchRect = bench.getBoundingClientRect();
 

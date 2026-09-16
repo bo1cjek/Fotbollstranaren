@@ -764,7 +764,24 @@
           "onBench": true
         }
       }
+    },
+    {
+      "id": "match_1789543873799",
+      "teamId": "team_1789539800079",
+      "opponent": "Jjjj",
+      "type": "7",
+      "formation": "custom",
+      "squad": [
+        "p_1789539805277"
+      ],
+      "positions": {
+        "p_1789539805277": {
+          "x": 0,
+          "y": 0,
+          "onBench": true
+        }
+      }
     }
   ],
-  "__updatedAt": "2026-09-16T07:27:31.776Z"
+  "__updatedAt": "2026-09-16T07:31:14.414Z"
 }

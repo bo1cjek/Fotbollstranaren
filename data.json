@@ -239,10 +239,9 @@
           "role": "Vänster mitt"
         },
         "p_1789464884233": {
-          "x": 78,
-          "y": 50,
-          "onBench": false,
-          "role": "Anfallare"
+          "x": 0,
+          "y": 0,
+          "onBench": true
         },
         "p_1789464892849": {
           "x": 0,
@@ -337,6 +336,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T12:04:35.771Z",
-  "__version": 69
+  "__updatedAt": "2026-09-16T12:04:44.080Z",
+  "__version": 70
 }

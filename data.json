@@ -171,8 +171,17 @@
       "formation": "custom",
       "squad": [],
       "positions": {}
+    },
+    {
+      "id": "match_1789561921376",
+      "teamId": "team_1789539800079",
+      "opponent": "Laxå IF",
+      "type": "7",
+      "formation": "custom",
+      "squad": [],
+      "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:26:54.246Z",
-  "__version": 85
+  "__updatedAt": "2026-09-16T12:32:01.380Z",
+  "__version": 86
 }

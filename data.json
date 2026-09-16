@@ -448,14 +448,14 @@
       ],
       "positions": {
         "p_1789539805277": {
-          "x": 22,
-          "y": 30,
+          "x": 48,
+          "y": 80,
           "onBench": false,
-          "role": "Vänsterback"
+          "role": "Höger mitt"
         }
       }
     }
   ],
-  "__updatedAt": "2026-09-16T08:04:29.421Z",
-  "__version": 19
+  "__updatedAt": "2026-09-16T08:04:30.829Z",
+  "__version": 20
 }

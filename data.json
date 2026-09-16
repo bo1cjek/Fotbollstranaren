@@ -480,10 +480,9 @@
           "role": "Vänsterback"
         },
         "p_1789464831077": {
-          "x": 45,
-          "y": 85,
-          "onBench": false,
-          "role": "Höger mitt"
+          "x": 0,
+          "y": 0,
+          "onBench": true
         },
         "p_1789464842402": {
           "x": 45,
@@ -602,6 +601,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T11:54:17.031Z",
-  "__version": 52
+  "__updatedAt": "2026-09-16T11:54:39.731Z",
+  "__version": 53
 }

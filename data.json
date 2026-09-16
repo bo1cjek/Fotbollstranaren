@@ -334,8 +334,17 @@
           "onBench": true
         }
       }
+    },
+    {
+      "id": "match_1789560325424",
+      "teamId": "team_1789462599734",
+      "opponent": "test",
+      "type": "7",
+      "formation": "custom",
+      "squad": [],
+      "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:04:44.080Z",
-  "__version": 70
+  "__updatedAt": "2026-09-16T12:05:25.441Z",
+  "__version": 71
 }

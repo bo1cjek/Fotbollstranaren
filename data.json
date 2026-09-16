@@ -321,10 +321,10 @@
           "role": "Vänster mitt"
         },
         "p_1789464919117": {
-          "x": 78,
-          "y": 50,
+          "x": 45,
+          "y": 62,
           "onBench": false,
-          "role": "Anfallare"
+          "role": "Mittfältare höger"
         },
         "p_1789464927001": {
           "x": 0,
@@ -419,5 +419,5 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T07:07:47.608Z"
+  "__updatedAt": "2026-09-16T07:07:50.720Z"
 }

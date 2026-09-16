@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>Fotbollstränaren v7.16</title>
+    <title>Fotbollstränaren v7.17</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -120,7 +120,7 @@
             #club-logo { width: 50px; height: 42px; }
             .club-header { padding: 10px 12px; gap: 10px; }
             .club-header .club-title { font-size: 1.1rem; }
-            #match-header { padding: calc(max(env(safe-area-inset-top, 0px), 24px) + 6px) 8px 6px 8px; }
+            #match-header { padding: calc(max(env(safe-area-inset-top, 0px), 40px) + 8px) 8px 6px 8px; }
             #club-logo-small { height: 34px; }
             #display-match-title { font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60vw; }
             #display-match-info { font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60vw; }
@@ -134,7 +134,7 @@
             body.sidebar-open #sidebar-overlay { opacity: 1; pointer-events: auto; }
             .sidebar-close { display: flex; }
             #sidebar-close { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 2px solid rgba(255,255,255,0.5); border-radius: 50%; background: rgba(255,255,255,0.12); color: #fff; font-size: 0.95rem; cursor: pointer; flex-shrink: 0; }
-            .club-header { padding-top: calc(env(safe-area-inset-top, 0px) + 10px); }
+            .club-header { padding-top: calc(max(env(safe-area-inset-top, 0px), 40px) + 8px); }
 
             /* Mobil: proportionerlig plan (landskap) som centreras */
             #pitch-container .pitch { width: min(100%, calc((100dvh - 190px) * 1.6)); height: auto; aspect-ratio: 16/10; max-height: 100%; }
@@ -532,8 +532,29 @@
             }
         }
 
-        // Synka nu: vänta in pågående sparning, spara lokala ändringar, hämta sedan
-        // ALLTID färskaste data via GitHub API:t (kringgår CDN-cachen)
+        // Läs data.json: först GitHub API (färskt, fungerar även utan token
+        // för publikt repo), sedan raw CDN som reserv. Returnerar parsed data eller null.
+        async function fetchCloudData() {
+            const readHeaders = GITHUB_TOKEN
+                ? apiHeaders()
+                : { 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+            try {
+                const res = await fetch(API_URL, { headers: readHeaders });
+                if (res.ok) {
+                    const meta = await res.json();
+                    const content = typeof meta.content === 'string' ? meta.content : '';
+                    if (content) return JSON.parse(decodeURIComponent(escape(atob(content))));
+                }
+            } catch(e) { /* fallback till raw nedan */ }
+            // Raw CDN som reserv (kan ligga några minuter efter API:t)
+            const rawUrl = RAW_URL + '?_=' + Date.now();
+            const rawRes = await fetch(rawUrl);
+            if (rawRes.ok) return await rawRes.json();
+            return null;
+        }
+
+        // Synka nu: spara lokala ändringar, läs ALLTID färskaste data (API + raw som
+        // reserv) och tvinga fram den i UI direkt - ingen sidladdning behövs.
         async function syncNow() {
             const btn = document.getElementById('sync-button');
             const originalHtml = btn ? btn.innerHTML : '';
@@ -546,29 +567,32 @@
                 while (isSaving) {
                     await new Promise(r => setTimeout(r, 300));
                 }
+                // Spara lokala ändringar först, så vi har senaste data att hämta
                 if (dirty) await saveToCloud();
-                // Läs ALLTID via GitHub API:t - även utan token fungerar läsning av
-                // ett publikt repo, och API-svaret är aldrig CDN-cachat. Raw-CDN:en
-                // (som pollningen använder när token saknas) kan ligga minuter efter.
-                const readHeaders = GITHUB_TOKEN
-                    ? apiHeaders()
-                    : { 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
-                try {
-                    const res = await fetch(API_URL, { headers: readHeaders });
-                    if (res.ok) {
-                        const meta = await res.json();
-                        const content = typeof meta.content === 'string' ? meta.content : '';
-                        if (content) {
-                            const data = JSON.parse(decodeURIComponent(escape(atob(content))));
-                            applyCloudData(data, true);
-                            if (btn) btn.innerHTML = '&#10003;&#65039; Synk klar';
-                            btn.disabled = false;
-                            setTimeout(() => { if (btn) { btn.innerHTML = originalHtml; btn.disabled = false; } }, 2500);
-                            return;
-                        }
+
+                const data = await fetchCloudData();
+                if (data && data.teams) {
+                    if (!dirty) {
+                        // Manuell synk = ta molndata som sanning direkt (om vi inte har
+                        // osparade lokala ändringar som precis misslyckades att spara)
+                        appData = data;
+                        lastSavedJson = JSON.stringify(data);
+                        const cloudTime = data.__updatedAt ? new Date(data.__updatedAt).getTime() : 0;
+                        if (data.__updatedAt) lastSavedTime = cloudTime;
+                        if (typeof data.__version === 'number') lastVersion = data.__version;
+                        persistSyncState();
+                        refreshUI();
+                        if (data.__updatedAt) showLastSaved(new Date(data.__updatedAt));
+                        else if (lastSavedTime > 0) showLastSaved(new Date(lastSavedTime));
+                    } else {
+                        applyCloudData(data, true);
                     }
-                } catch(e) { /* fallback till vanlig synk nedan */ }
-                loadFromCloud();
+                } else {
+                    if (btn) btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                    updateStatus('⚠️ Ingen data.json hittades - ändra något för att skapa den', '#facc15');
+                    return;
+                }
                 if (btn) btn.innerHTML = '&#10003;&#65039; Synk klar';
                 btn.disabled = false;
                 setTimeout(() => { if (btn) { btn.innerHTML = originalHtml; btn.disabled = false; } }, 2500);

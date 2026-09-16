@@ -299,10 +299,10 @@
           "onBench": true
         },
         "p_1789562218977": {
-          "x": 48,
-          "y": 80,
+          "x": 22,
+          "y": 70,
           "onBench": false,
-          "role": "Höger mitt"
+          "role": "Högerback"
         },
         "p_1789562206972": {
           "x": 0,
@@ -438,6 +438,6 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:40:53.083Z",
-  "__version": 142
+  "__updatedAt": "2026-09-16T12:40:55.626Z",
+  "__version": 143
 }

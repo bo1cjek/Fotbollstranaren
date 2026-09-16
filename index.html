@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Fotbollstränaren v7.3</title>
+    <title>Fotbollstränaren v7.4</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -38,8 +38,9 @@
         .btn-group { display: flex; gap: 6px; }
         .list-item { background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; }
         .list-item.selected { border-color: #0284c7; background: #f0f9ff; }
-        
+
         #sync-status { font-size: 0.75rem; color: #94a3b8; text-align: center; padding: 4px; background: #1e293b; }
+        #last-saved { font-size: 0.75rem; color: #94a3b8; text-align: center; padding: 2px 4px 6px 4px; background: #1e293b; border-top: 1px solid #334155; }
 
         #main-area { flex: 1; display: flex; flex-direction: column; background: #0f172a; position: relative; overflow: hidden; }
         #match-header { background: #1e293b; color: #ffffff; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
@@ -81,7 +82,8 @@
                 <button class="tab-btn" onclick="switchTab('matches', event)">Matcher</button>
                 <button class="tab-btn" onclick="switchTab('tactics', event)">Taktik</button>
             </div>
-            <div id="sync-status">Ansluter till moln...</div>
+            <div id="sync-status">Ansluter till Google...</div>
+            <div id="last-saved">Senast sparat: --</div>
 
             <div id="tab-teams" class="tab-content active">
                 <h2>Mina Lag</h2>
@@ -190,8 +192,24 @@
     </div>
 
     <script>
-        // Kopplad till din npoint-länk:
-        const CLOUD_URL = 'https://api.npoint.io/011de991c224ccd6ebc6';
+        // ====== GITHUB KONFIGURATION ======
+        // Filen läses utan token (repo är publikt). För att SPARA krävs en token:
+        // GitHub.com -> Settings -> Developer settings -> Personal access tokens -> Fine-grained tokens
+        // Rättigheter: Endast detta repo, Contents: Read and write. Inget annat!
+        // VARNING: Token är synlig i källkoden - begränsa den så mycket som möjligt!
+        const GITHUB_OWNER  = 'bo1cjek';              // GitHub-användarnamn
+        const GITHUB_REPO   = 'Fotbollstranaren';     // Repo-namn
+        const GITHUB_BRANCH = 'main';                 // eller 'master' - kolla i ditt repo!
+        const GITHUB_TOKEN  = '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';     // <-- KLISTRA IN DIN TOKEN HÄR
+        const DATA_FILE     = 'data.json';
+
+        const RAW_URL  = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${DATA_FILE}`;
+        const API_URL  = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`;
+        const HEADERS  = {
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28'
+        };
 
         let appData = { teams: [], matches: [] };
         let currentTeamId = null;
@@ -220,35 +238,84 @@
             }
         }
 
+        function showLastSaved(ts) {
+            const el = document.getElementById('last-saved');
+            if (!el) return;
+            el.innerText = ts
+                ? 'Senast sparat: ' + ts.toLocaleString('sv-SE')
+                : 'Senast sparat: --';
+        }
+
+        // Konvertering till base64 som klarar svenska tecken (utf-8)
+        function utf8ToBase64(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
         async function loadFromCloud() {
             try {
-                const res = await fetch(CLOUD_URL);
+                const res = await fetch(RAW_URL);
                 if (res.ok) {
                     const data = await res.json();
                     if(data && data.teams) {
                         appData = data;
                         refreshUI();
-                        updateStatus('☁️ Synkat med molnet', '#4ade80');
+                        updateStatus('☁️ Synkat med GitHub', '#4ade80');
+                        if (data.__updatedAt) showLastSaved(new Date(data.__updatedAt));
                     }
                 } else {
-                    updateStatus('⚠️ Kontrollera npoint-länk (404)', '#f87171');
+                    updateStatus('⚠️ Ingen data.json hittades - ändra något för att skapa den', '#facc15');
                 }
             } catch(e) {
                 updateStatus('⚠️ Offline', '#f87171');
             }
         }
 
+        // SPARA data.json till GitHub. Kräver token. Skapar filen om den inte finns.
         async function saveToCloud() {
             if (isSaving) return;
             isSaving = true;
-            updateStatus('Sparar till molnet...', '#facc15');
+            updateStatus('Sparar till GitHub...', '#facc15');
+
             try {
-                await fetch(CLOUD_URL, {
+                // 1) Hämta nuvarande sha på filen (behövs för att uppdatera, inte för att skapa)
+                let sha = null;
+                try {
+                    const metaRes = await fetch(API_URL, { headers: HEADERS });
+                    if (metaRes.ok) {
+                        const meta = await metaRes.json();
+                        sha = meta.sha;
+                    }
+                } catch(e) { /* filen finns inte ännu - vi skapar den */ }
+
+                // 2) Skapa eller uppdatera filen
+                const saveData = JSON.parse(JSON.stringify(appData));
+                saveData.__updatedAt = new Date().toISOString();
+                const body = {
+                    message: `App-data ${new Date().toLocaleString('sv-SE')}`,
+                    content: utf8ToBase64(JSON.stringify(saveData, null, 2))
+                };
+                if (sha) body.sha = sha;
+
+                const res = await fetch(API_URL, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(appData)
+                    headers: HEADERS,
+                    body: JSON.stringify(body)
                 });
-                updateStatus('☁️ Sparat i molnet', '#4ade80');
+
+                if (res.ok) {
+                    const updated = new Date(saveData.__updatedAt);
+                    appData.__updatedAt = saveData.__updatedAt;
+                    showLastSaved(updated);
+                    updateStatus('☁️ Sparat i GitHub', '#4ade80');
+                } else {
+                    const err = await res.json();
+                    if (err.message && err.message.includes('must match')) {
+                        updateStatus('⚠️ Någon annan sparade samtidigt - provar igen', '#facc15');
+                        setTimeout(saveToCloud, 2000);
+                    } else {
+                        updateStatus('❌ Kunde inte spara: ' + (err.message || res.status), '#f87171');
+                    }
+                }
             } catch(e) {
                 updateStatus('❌ Kunde inte spara', '#f87171');
             }
@@ -385,6 +452,14 @@
             team.players = team.players.filter(p => p.id !== playerId);
             saveToCloud();
             renderPlayers();
+            // Ta även bort spelarens plats i matcherna
+            appData.matches.forEach(m => {
+                if (m.teamId === currentTeamId) {
+                    m.squad = m.squad.filter(pid => pid !== playerId);
+                    delete m.positions[playerId];
+                }
+            });
+            saveToCloud();
             if (currentMatchId) renderBoard();
         }
 

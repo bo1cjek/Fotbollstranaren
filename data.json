@@ -216,9 +216,9 @@
         },
         "p_1789465031005": {
           "x": 45,
-          "y": 85,
+          "y": 38,
           "onBench": false,
-          "role": "Höger mitt"
+          "role": "Mittfältare vänster"
         },
         "p_1789464927001": {
           "x": 0,
@@ -602,6 +602,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T12:01:50.567Z",
-  "__version": 61
+  "__updatedAt": "2026-09-16T12:01:54.545Z",
+  "__version": 62
 }

@@ -429,8 +429,16 @@
       "opponent": "Rävåsens IK - 19/9",
       "type": "9",
       "formation": "custom",
-      "squad": [],
-      "positions": {}
+      "squad": [
+        "p_1789464809920"
+      ],
+      "positions": {
+        "p_1789464809920": {
+          "x": 0,
+          "y": 0,
+          "onBench": true
+        }
+      }
     },
     {
       "id": "match_1789562045168",
@@ -442,6 +450,6 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:42:20.846Z",
-  "__version": 147
+  "__updatedAt": "2026-09-16T12:53:02.485Z",
+  "__version": 148
 }

@@ -449,13 +449,13 @@
       "positions": {
         "p_1789539805277": {
           "x": 45,
-          "y": 38,
+          "y": 62,
           "onBench": false,
-          "role": "Mittfältare vänster"
+          "role": "Mittfältare höger"
         }
       }
     }
   ],
-  "__updatedAt": "2026-09-16T08:04:45.050Z",
-  "__version": 26
+  "__updatedAt": "2026-09-16T08:04:46.918Z",
+  "__version": 27
 }

@@ -418,26 +418,8 @@
           "onBench": true
         }
       }
-    },
-    {
-      "id": "match_1789544879042",
-      "teamId": "team_1789539800079",
-      "opponent": "lkölöklkölökölk",
-      "type": "7",
-      "formation": "3-4-1",
-      "squad": [
-        "p_1789539805277"
-      ],
-      "positions": {
-        "p_1789539805277": {
-          "x": 45,
-          "y": 38,
-          "onBench": false,
-          "role": "Mittfältare vänster"
-        }
-      }
     }
   ],
-  "__updatedAt": "2026-09-16T08:16:03.237Z",
-  "__version": 37
+  "__updatedAt": "2026-09-16T08:26:46.463Z",
+  "__version": 38
 }

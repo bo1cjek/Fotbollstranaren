@@ -280,8 +280,16 @@
       "opponent": "ÖSK Svart 1 - 19/9",
       "type": "7",
       "formation": "2-3-1",
-      "squad": [],
-      "positions": {}
+      "squad": [
+        "p_1789562158503"
+      ],
+      "positions": {
+        "p_1789562158503": {
+          "x": 0,
+          "y": 0,
+          "onBench": true
+        }
+      }
     },
     {
       "id": "match_1789561975414",
@@ -311,6 +319,6 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:37:05.743Z",
-  "__version": 122
+  "__updatedAt": "2026-09-16T12:37:16.165Z",
+  "__version": 123
 }

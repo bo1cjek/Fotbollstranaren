@@ -448,14 +448,14 @@
       ],
       "positions": {
         "p_1789539805277": {
-          "x": 78,
-          "y": 50,
+          "x": 45,
+          "y": 85,
           "onBench": false,
-          "role": "Anfallare"
+          "role": "Höger mitt"
         }
       }
     }
   ],
-  "__updatedAt": "2026-09-16T08:04:40.922Z",
-  "__version": 24
+  "__updatedAt": "2026-09-16T08:04:43.354Z",
+  "__version": 25
 }

@@ -235,9 +235,14 @@
                         <option value="11">11-manna</option>
                     </select>
                 </div>
-                <button class="btn-primary" onclick="createMatch()">Skapa ny match</button>
+<button class="btn-primary" onclick="createMatch()">Skapa ny match</button>
                 <hr style="margin: 15px 0; border: none; border-top: 1px solid #e2e8f0;">
                 <h3>Sparade Matcher</h3>
+                <div class="form-group">
+                    <select id="match-filter" onchange="filterMatchesByTeam()">
+                        <option value="">--- Alla lag ---</option>
+                    </select>
+                </div>
                 <div id="match-list"></div>
             </div>
 
@@ -999,12 +1004,38 @@ async function fetchCloudData() {
             updateStatus('✅ Match skapad!', '#4ade80');
         }
 
+function renderTeamFilter() {
+            const filter = document.getElementById('match-filter');
+            if(!filter) return;
+            const current = filter.value;
+            const teams = appData.teams.filter(t => appData.matches.some(m => m.teamId === t.id));
+            let html = `<option value="">--- Alla lag ---</option>`;
+            teams.forEach(t => {
+                html += `<option value="${t.id}">${t.name}</option>`;
+            });
+            filter.innerHTML = html;
+            const stillExists = teams.some(t => t.id === current);
+            filter.value = stillExists ? current : '';
+        }
+
+        function filterMatchesByTeam() {
+            renderMatchList();
+        }
+
         function renderMatchList() {
             const list = document.getElementById('match-list');
             if(!list) return;
+            renderTeamFilter();
             list.innerHTML = '';
 
-            appData.matches.forEach(m => {
+            const filter = document.getElementById('match-filter');
+            const filterTeamId = filter ? filter.value : '';
+
+            const matches = filterTeamId
+                ? appData.matches.filter(m => m.teamId === filterTeamId)
+                : appData.matches;
+
+            matches.forEach(m => {
                 const team = appData.teams.find(t => t.id === m.teamId);
                 list.innerHTML += `
                     <div class="list-item ${currentMatchId === m.id ? 'selected' : ''}" onclick="loadMatch('${m.id}')">
@@ -1016,6 +1047,10 @@ async function fetchCloudData() {
                     </div>
                 `;
             });
+
+            if (matches.length === 0) {
+                list.innerHTML = '<div class="position-hint">Inga matcher här ännu.</div>';
+            }
         }
 
         function deleteMatch(id) {

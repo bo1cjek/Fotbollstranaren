@@ -451,25 +451,9 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T13:16:36.600Z",
-  "__version": 155,
-  "exercises": [
-    {
-      "id": "ex_1789564040199",
-      "name": "asdasda",
-      "duration": 12,
-      "info": "asdasd",
-      "items": [
-        {
-          "type": "arrow",
-          "x1": 34.2,
-          "y1": 43,
-          "x2": 52.4,
-          "y2": 57.3
-        }
-      ]
-    }
-  ],
+  "__updatedAt": "2026-09-16T13:16:38.784Z",
+  "__version": 156,
+  "exercises": [],
   "trainings": [
     {
       "id": "tr_1789563879721",

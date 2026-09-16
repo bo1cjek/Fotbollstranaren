@@ -310,10 +310,9 @@
           "role": "Mittfältare vänster"
         },
         "p_1789464904202": {
-          "x": 45,
-          "y": 62,
-          "onBench": false,
-          "role": "Mittfältare höger"
+          "x": 0,
+          "y": 0,
+          "onBench": true
         },
         "p_1789464911636": {
           "x": 45,
@@ -420,5 +419,5 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T07:07:41.733Z"
+  "__updatedAt": "2026-09-16T07:07:47.608Z"
 }

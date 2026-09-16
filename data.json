@@ -418,8 +418,25 @@
           "onBench": true
         }
       }
+    },
+    {
+      "id": "match_1789547274440",
+      "teamId": "team_1789539800079",
+      "opponent": "IOJK",
+      "type": "7",
+      "formation": "custom",
+      "squad": [
+        "p_1789539805277"
+      ],
+      "positions": {
+        "p_1789539805277": {
+          "x": 0,
+          "y": 0,
+          "onBench": true
+        }
+      }
     }
   ],
-  "__updatedAt": "2026-09-16T08:27:15.155Z",
-  "__version": 40
+  "__updatedAt": "2026-09-16T08:27:54.444Z",
+  "__version": 41
 }

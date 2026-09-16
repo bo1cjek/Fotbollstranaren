@@ -442,7 +442,7 @@
       "teamId": "team_1789539800079",
       "opponent": "Jkkk",
       "type": "7",
-      "formation": "2-3-1",
+      "formation": "3-4-1",
       "squad": [
         "p_1789539805277"
       ],
@@ -456,6 +456,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T08:04:38.208Z",
-  "__version": 23
+  "__updatedAt": "2026-09-16T08:04:40.922Z",
+  "__version": 24
 }

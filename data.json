@@ -463,9 +463,9 @@
         },
         "p_1789464800657": {
           "x": 20,
-          "y": 25,
+          "y": 75,
           "onBench": false,
-          "role": "Vänsterback"
+          "role": "Högerback"
         },
         "p_1789464809920": {
           "x": 20,
@@ -474,9 +474,10 @@
           "role": "Mittback"
         },
         "p_1789464819699": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 20,
+          "y": 25,
+          "onBench": false,
+          "role": "Vänsterback"
         },
         "p_1789464831077": {
           "x": 45,
@@ -503,9 +504,10 @@
           "role": "Vänster mitt"
         },
         "p_1789464884233": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 78,
+          "y": 50,
+          "onBench": false,
+          "role": "Anfallare"
         },
         "p_1789464892849": {
           "x": 0,
@@ -593,14 +595,13 @@
           "onBench": true
         },
         "p_1789465049915": {
-          "x": 78,
-          "y": 50,
-          "onBench": false,
-          "role": "Anfallare"
+          "x": 0,
+          "y": 0,
+          "onBench": true
         }
       }
     }
   ],
-  "__updatedAt": "2026-09-16T11:53:51.586Z",
-  "__version": 51
+  "__updatedAt": "2026-09-16T11:54:17.031Z",
+  "__version": 52
 }

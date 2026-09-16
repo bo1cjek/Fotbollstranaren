@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+?<!DOCTYPE html>
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>FotbollstrÃ¤naren v7.8</title>
+    <title>Fotbollstränaren v7.7</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -22,11 +22,12 @@
         #app-container { display: flex; flex: 1; width: 100%; height: 100%; overflow: hidden; }
         #sidebar { width: 380px; background: #ffffff; border-right: 2px solid #e2e8f0; display: flex; flex-direction: column; z-index: 10; }
 
-        .club-header { background: var(--ifk-blue); color: #fff; padding: 12px 14px; display: flex; align-items: center; gap: 12px; border-bottom: 4px solid #fff; }
-        .club-header .club-copy { display: flex; flex-direction: column; }
-        .club-header .club-title { font-size: 1.2rem; font-weight: 800; letter-spacing: 0.5px; }
-        .club-header .club-sub { font-size: 0.7rem; color: #dbe4ff; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
-        #club-logo { width: 56px; height: 46px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25)); flex-shrink: 0; }
+        .club-header { background: linear-gradient(135deg, var(--ifk-blue) 0%, var(--ifk-blue-dark) 100%); color: #fff; padding: 14px 16px; display: flex; align-items: center; gap: 14px; border-bottom: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.25); position: relative; overflow: hidden; }
+        .club-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(-60deg, rgba(255,255,255,0.05) 0 8px, transparent 8px 16px); pointer-events: none; }
+        .club-header .club-copy { display: flex; flex-direction: column; min-width: 0; z-index: 1; }
+        .club-header .club-title { font-size: 1.45rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; line-height: 1.1; white-space: nowrap; }
+        .club-header .club-sub { font-size: 0.72rem; color: #dbe4ff; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-top: 2px; }
+        #club-logo { width: 64px; height: 52px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); flex-shrink: 0; background: #fff; border-radius: 10px; padding: 3px; z-index: 1; }
 
         .tabs { display: flex; background: var(--ifk-blue-dark); overflow-x: auto; }
         .tab-btn { flex: 1; padding: 12px 6px; border: none; background: none; color: #a5b4fc; font-weight: 600; font-size: 0.8rem; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
@@ -52,16 +53,16 @@
         #sync-status { font-size: 0.75rem; color: #c7d2fe; text-align: center; padding: 4px; background: var(--ifk-blue-dark); }
         #last-saved { font-size: 0.75rem; color: #c7d2fe; text-align: center; padding: 6px 8px; background: var(--ifk-blue-dark); border-top: 1px solid var(--ifk-blue); }
 
-        #main-area { flex: 1; display: flex; flex-direction: column; background: #eef2ff; position: relative; overflow: hidden; }
-        #match-header { background: var(--ifk-blue); color: #ffffff; padding: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #fff; }
+        #main-area { flex: 1; display: flex; flex-direction: column; background: linear-gradient(180deg, #172554 0%, #0f172a 100%); position: relative; overflow: hidden; }
+        #match-header { background: linear-gradient(135deg, var(--ifk-blue) 0%, var(--ifk-blue-dark) 100%); color: #ffffff; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
         #match-header .match-info-box { display: flex; flex-direction: column; }
         #match-header .match-brand { display: flex; align-items: center; gap: 10px; }
-        #club-logo-small { height: 48px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25)); }
+        #club-logo-small { height: 46px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); background: #fff; border-radius: 8px; padding: 2px; }
         #display-match-title { color: #ffffff; font-size: 1.1rem; font-weight: 700; }
         #display-match-info { font-size: 0.85rem; color: #dbe4ff; }
 
-        #pitch-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 10px; position: relative; }
-        .pitch { width: 100%; height: 100%; max-width: 900px; max-height: 600px; background-color: var(--pitch-green); border: 3px solid var(--pitch-line); border-radius: 8px; position: relative; overflow: hidden; }
+        #pitch-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 16px; position: relative; }
+        .pitch { width: 100%; height: 100%; max-width: 1000px; max-height: 640px; background: linear-gradient(180deg, #388e3c 0%, var(--pitch-green) 100%); border: 3px solid var(--pitch-line); border-radius: 10px; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 60px rgba(0,0,0,0.15); }
         .pitch-line-center { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: var(--pitch-line); transform: translateX(-50%); }
         .pitch-circle-center { position: absolute; top: 50%; left: 50%; width: 80px; height: 80px; border: 2px solid var(--pitch-line); border-radius: 50%; transform: translate(-50%, -50%); }
         .penalty-area { position: absolute; top: 20%; bottom: 20%; width: 18%; border: 2px solid var(--pitch-line); }
@@ -72,17 +73,22 @@
         #bench-area h4 { color: #c7d2fe; margin-bottom: 6px; font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px; }
         .bench-slots { display: flex; gap: 12px; overflow-x: auto; flex: 1; align-items: center; }
 
-        .player-pin { width: 42px; height: 42px; background: var(--ifk-blue); color: white; border: 2px solid #fff; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; font-size: 0.75em; cursor: grab; position: absolute; transform: translate(-50%, -50%); user-select: none; z-index: 20; touch-action: none; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .player-pin { width: 52px; height: 52px; background: var(--ifk-blue); color: white; border: 3px solid #fff; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; font-size: 0.85em; cursor: grab; position: absolute; transform: translate(-50%, -50%); user-select: none; z-index: 20; touch-action: none; box-shadow: 0 3px 8px rgba(0,0,0,0.45); }
         .player-pin.on-bench { position: relative; transform: none; flex-shrink: 0; top: auto !important; left: auto !important; background: #eef2ff; color: var(--ifk-blue); border-color: var(--ifk-blue); box-shadow: none; }
-        .player-pin .number { font-size: 0.9em; line-height: 1; font-weight: 800; }
-        .player-pin .name { font-size: 0.65em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 38px; text-align: center; }
+        .player-pin .number { font-size: 1em; line-height: 1; font-weight: 800; }
+        .player-pin .name { font-size: 0.7em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 46px; text-align: center; }
 
         @media (max-width: 768px) {
             #app-container { flex-direction: column; }
             #sidebar { width: 100%; height: 45vh; border-right: none; }
             #main-area { height: 55vh; }
-            .player-pin { width: 38px; height: 38px; }
+            .player-pin { width: 44px; height: 44px; border-width: 2px; }
             #bench-area { height: 95px; }
+            #club-logo { width: 50px; height: 42px; }
+            .club-header { padding: 10px 12px; gap: 10px; }
+            .club-header .club-title { font-size: 1.1rem; }
+            #match-header { padding: 8px 10px; }
+            #pitch-container { padding: 8px; }
         }
     </style>
 </head>
@@ -94,7 +100,7 @@
                 <img id="club-logo" src="data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjIiIHZpZXdCb3g9IjAgMCA1NjAgNDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnIHRyYW5zZm9ybT0ibWF0cml4KC43OTY3NDQgMCAwIC43OTY3NDQgMTYyLjg3OSA2NC45OTE4KSI+PHBhdGggZD0ibTE0Ny4wMDUgMzIyLjQ1NWM3Ny43ODQtNDEuNzQ1IDEyMS4zMTUtMTA1LjE4IDEzMC41OTUtMTkwLjMwMyAzLjQ5Mi0zMi4wMzYgMi4xMzMtNjcuMTQ0LTQuMDc0LTEwNS4zMjItMTQuNSAxMS42MzEtMjkgMTkuMTY4LTQzLjUgMjIuNjA3LTI3LjY4MSA2LjU2Ni01NS4zNjItMS43OTgtODMuMDQzLTI1LjA5LTM5LjQzNyAzNC45MzItODEuOTI0IDMxLjc0OC0xMjYuNDk4IDIuNDgzLTEwLjI5IDYzLjI2OC03LjI1NyAxMTguMTAxIDkuMDk2IDE2NC40OTggOC43ODkgMjQuOTM2IDIxLjQyNiA0Ny40MzUgMzcuOTExIDY3LjQ5OSAyMC41MzQgMjQuOTg5IDQ3LjAzOSA0Ni4xOTkgNzkuNTEzIDYzLjYyOHoiIGZpbGw9IiMyNTNkOTciLz48cGF0aCBkPSJtMTQ3LjAwNyAzMDUuOTA1YzMzLjU0Ni0xOS4xMTIgNTkuODg3LTQyLjYxMiA3OS4wMjMtNzAuNDk4IDIwLjQwNy0yOS43MzcgMzIuNzk3LTY0LjY2NiAzNy4xNzItMTA0Ljc4NiAxLjY1Mi0xNS4xNDkgMi4xNDgtMzEuMjU2IDEuNDg3LTQ4LjMxNy0uMzg0LTkuOTQxLTEuMTU2LTIwLjA2LTIuMzEtMzAuMzU2LTEuMzA3LjczOS0yLjYxMSAxLjQ0Ni0zLjkxNCAyLjEyNS04LjMyMiA0LjMyNC0xNi42ODcgNy40ODQtMjUuMDk1IDkuNDc4LTE2LjM3NiAzLjg4My0zMi43MyAzLjM2LTQ5LjA2LTEuNTc1LTEyLjU0Mi0zLjc4OS0yNC45NDktMTAuMTU0LTM3LjIyMi0xOS4wOTYtMTkuNzIgMTQuNjUtNDAuMjUyIDIxLjM4MS02MS40ODUgMjEuMjkzLTE3Ljc4NS0uMDczLTM1LjcxNy00Ljk2NS01My43NzYtMTQuMDA3LTIuNjQxIDIyLjYxMy0zLjM5OSA0NC4wOTYtMi4yNzQgNjQuNDQ2IDEuNDQ0IDI2LjE0MiA2LjAwNyA1MC4xMDggMTMuNjg4IDcxLjg5OCA0LjEwOSAxMS42NTkgOS4xMjYgMjIuNzYyIDE1LjA1IDMzLjMwOCA1Ljk1OSAxMC42MSAxMi43NDggMjAuNTUxIDIwLjM2NyAyOS44MjQgOS41MDUgMTEuNTY5IDIwLjU2NiAyMi40MDEgMzMuMTgyIDMyLjQ5NiAxMC43NTcgOC42MSAyMi40OCAxNi41MzEgMzUuMTY3IDIzLjc2N3ptMTAyLjk0NC01NC4xNzJjLTIzLjEwOCAzMy42NzMtNTUuMTM2IDYxLjQ5OC05Ni4wODggODMuNDc2bC02Ljg1OCAzLjY4MS02Ljg1OC0zLjY4MWMtMTcuMTI5LTkuMTkzLTMyLjYxMS0xOS4zMjYtNDYuNDQ2LTMwLjM5NS0xMy44ODgtMTEuMTE1LTI2LjM0OC0yMy4zODQtMzcuMzc1LTM2LjgwNC04Ljg2Ni0xMC43OTEtMTYuNjM5LTIyLjEzMS0yMy4zMTctMzQuMDE5LTYuNzEzLTExLjk1Mi0xMi40MTEtMjQuNTY4LTE3LjA4OS0zNy44NDQtOC42NzMtMjQuNjA3LTEzLjgwNC01MS4yNTgtMTUuMzg5LTc5Ljk0OC0xLjU2My0yOC4yNzQuMzI3LTU4LjgzOSA1LjY3LTkxLjY5M2wzLjU5MS0yMi4wNzYgMTguNjg3IDEyLjI2OWMxOS45NjYgMTMuMTEgMzkuMTEgMjAuMzc2IDU3LjIzOCAyMC40NTIgMTcuNTg5LjA3MyAzNC44MzktNi43MDkgNTEuNjg3LTIxLjYzMmw5LjM4Ny04LjMxNSA5LjU0NSA4LjAzMmMxMi4zMzMgMTAuMzc4IDI0LjQ1NSAxNy4zNjcgMzYuMzYzIDIwLjk2NSAxMS4zNTEgMy40MjkgMjIuNjc4IDMuODAzIDMzLjk4NCAxLjEyMSA2LjA5LTEuNDQ0IDEyLjIyNi0zLjc3MyAxOC40MDQtNi45ODUgNi40ODgtMy4zNzEgMTIuOTQ1LTcuNjM1IDE5LjM2OS0xMi43ODhsMTkuMzctMTUuNTM5IDMuOTgzIDI0LjQ5NWMzLjI0MiAxOS45MzIgNS4yMSAzOC44NTkgNS45MDMgNTYuNzc5LjY5OSAxOC4wNDYuMTI1IDM1LjUxMy0xLjcxNCA1Mi4zOTgtNC45MDcgNDUuMDAzLTE4LjkyMyA4NC4zNTMtNDIuMDQ3IDExOC4wNTF6IiBmaWxsPSIjMjUzZDk3IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJtMjc3LjYgMTMyLjE1MmMzLjQ5Mi0zMi4wMzYgMi4xMzMtNjcuMTQ0LTQuMDc0LTEwNS4zMjItMTQuNSAxMS42MzEtMjkgMTkuMTY4LTQzLjUgMjIuNjA3LTQwLjM0MyA3Ny4wOC0xMDguNzYxIDEyMi41NzItMjAwLjQ0NSAxNDEuODkxIDguNzg5IDI0LjkzNiAyMS40MjYgNDcuNDM1IDM3LjkxMSA2Ny40OTkgODUuOTQtMjAuMjA0IDE1Ny41NDEtNjAuMjYzIDIxMC4xMDgtMTI2LjY3NXoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJtMjcwLjM5MyAxMjkuMTUyYzEuNTEyLTE0LjkxMiAxLjk0OC0zMC42MTEgMS4zMS00Ny4wOTQtLjUyNS0xMy41NS0xLjc2OS0yNy40OTMtMy43MzItNDEuODI4LTQuMjUxIDIuODc4LTguNDk4IDUuNDE5LTEyLjc0IDcuNjIzLTYuNjk2IDMuNDgxLTEzLjQxMiA2LjE1NS0yMC4xNDEgOC4wMTktMjAuNTgzIDM4LjI1Mi00OC4wMjYgNjguODEyLTgxLjc1OCA5Mi4zMi0zMi4zMzMgMjIuNTM1LTcwLjQxMiAzOC41MzctMTEzLjcyOSA0OC41NzggMy42MjggOS4xNzggNy44MiAxOC4wMDMgMTIuNTc5IDI2LjQ3NCA1LjM2NyA5LjU1NiAxMS40MTkgMTguNjIyIDE4LjE1NiAyNy4xOTkgNDAuNDc1LTkuOTExIDc3LjYyMS0yNC4zNjQgMTEwLjkxNS00NC4wNjkgMzMuODExLTIwLjAxIDYzLjcwNC00NS41IDg5LjE0LTc3LjIyMnptMTYuMzA0LTQ3LjYyMmMuNjkxIDE3LjgwOC4xMzYgMzQuOTQ1LTEuNjU5IDUxLjQxM2wtLjI0IDIuMjA5LTEuMzExIDEuNjU2Yy0yNi44NDggMzMuOTE5LTU4LjU5IDYxLjEyOC05NC42MTggODIuNDUyLTM1Ljg5MSAyMS4yNDMtNzUuOTgxIDM2LjU4NS0xMTkuNjc4IDQ2Ljg1OWwtNC41MDQgMS4wNTgtMi45NjQtMy42MDZjLTguNTY0LTEwLjQyMy0xNi4wOTktMjEuNDI1LTIyLjYwMy0zMy4wMDYtNi41MjMtMTEuNjE0LTEyLjA1Ni0yMy44NjQtMTYuNTk3LTM2Ljc0N2wtMi44MzYtOC4wNDggOC4zNzItMS43NjRjNDQuODM0LTkuNDQ4IDgzLjkzOS0yNS4yNjYgMTE2LjcyMi00OC4xMTQgMzIuNjEzLTIyLjcyOSA1OS4wMDgtNTIuNDgxIDc4LjU5Ny04OS45MTJsMS41OTYtMy4wNDggMy4zMjQtLjc4OGM2LjY1MS0xLjU3OCAxMy4zMjctNC4xMDcgMjAuMDIxLTcuNTg3IDYuODU3LTMuNTYzIDEzLjY5Ni04LjA4MiAyMC41MjEtMTMuNTU2bDEwLjAwNy04LjAyOCAyLjA1OCAxMi42NTVjMy4xNzYgMTkuNTI2IDUuMTA3IDM4LjE2MiA1Ljc5MiA1NS45MDJ6IiBmaWxsPSIjMjUzZDk3IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48ZyBmaWxsPSIjZmZmIj48cGF0aCBkPSJtMTQ3LjAwMyAzMTYuOTYzYzM3LjEwOC0yMC4zMDEgNjYuMTEtNDUuNjcxIDg3LTc2LjExNSAyMS4zMTMtMzEuMDU2IDM0LjI0Ni02Ny40NTkgMzguNzk2LTEwOS4yMDcgMS43MTYtMTUuNzI3IDIuMjM3LTMyLjI4NyAxLjU2My00OS42NzctLjU3Ni0xNC45NTUtMi4wMzUtMzAuNDE3LTQuMzctNDYuMzg1LTUuMzMzIDMuODQzLTEwLjY2NCA3LjE0OC0xNS45ODggOS45MTUtNy42MDUgMy45NTMtMTUuMjI4IDYuODM2LTIyLjg2NCA4LjY0Ny0xNC42ODYgMy40ODMtMjkuMzY1IDMuMDA5LTQ0LjAzNC0xLjQyNC0xMy40MTctNC4wNTMtMjYuNzc2LTExLjQwOC00MC4wNzEtMjIuMDYzLTE5LjcxNiAxNi40MzQtNDAuMjIxIDIzLjkzMy02MS4zOTQgMjMuODQ1LTIwLjEwMi0uMDgzLTQwLjYzMi03LjAyMy02MS41MTktMTkuNjUxLTQuMjEyIDI4LjUwNy01LjYyNiA1NS4yNzEtNC4yNDMgODAuMjkzIDEuNDkyIDI2Ljk5MSA2LjI0NCA1MS44NTMgMTQuMjU0IDc0LjU4MiA0LjMgMTIuMTk4IDkuNTQzIDIzLjgwNSAxNS43MyAzNC44MiA2LjE5OSAxMS4wMzYgMTMuMzE2IDIxLjQ0NCAyMS4zNTEgMzEuMjIyIDEwLjAxNCAxMi4xODcgMjEuNTQxIDIzLjQ5OCAzNC41OCAzMy45MzIgMTIuNDI5IDkuOTQ3IDI2LjE2NiAxOS4wMzUgNDEuMjA5IDI3LjI2NnptOTQuOTc0LTcwLjY3MmMtMjIuMjEyIDMyLjM2OS01My4xMDkgNTkuMTc1LTkyLjY4NiA4MC40MTVsLTIuMjg2IDEuMjI3LTIuMjg2LTEuMjI3Yy0xNi41MzQtOC44NzMtMzEuNTI1LTE4LjY5MS00NC45NzItMjkuNDUxLTEzLjQ2NS0xMC43NzYtMjUuNDU4LTIyLjU2NS0zNS45NzgtMzUuMzY3LTguNDQ5LTEwLjI4NC0xNS44OTUtMjEuMTU4LTIyLjMzMy0zMi42MjEtNi40NS0xMS40ODMtMTEuOTItMjMuNTk1LTE2LjQwOS0zNi4zMzItOC4zNDMtMjMuNjY5LTEzLjI4NC00OS40MjQtMTQuODIzLTc3LjI2NC0xLjUzMS0yNy43MDIuMzA5LTU3LjU3NCA1LjUxOS04OS42MTVsMS4xOTctNy4zNTkgNi4yMjkgNC4wOWMyMS41MTQgMTQuMTI1IDQyLjQwNiAyMS45NTYgNjIuNTMgMjIuMDM5IDE5Ljk0NS4wODIgMzkuMzQ5LTcuNDcgNTguMTEtMjQuMDg4bDMuMTMtMi43NzIgMy4xODEgMi42NzdjMTMuMzM5IDExLjIyNCAyNi42MDcgMTguODMgMzkuODAyIDIyLjgxNyAxMy4wMTIgMy45MzEgMjYuMDE0IDQuMzU1IDM5LjAwOCAxLjI3MyA2Ljg2NS0xLjYyOCAxMy43NDUtNC4yMzQgMjAuNjM3LTcuODE2IDYuOTk1LTMuNjM2IDEzLjk4LTguMjUyIDIwLjk1NS0xMy44NDdsNi40NTYtNS4xNzkgMS4zMjkgOC4xNjVjMy4xNDkgMTkuMzcgNS4wNjggMzcuODk0IDUuNzUxIDU1LjU2OS42ODUgMTcuNzE3LjE0IDM0LjczLTEuNjM5IDUxLjAzNy00LjcyOCA0My4zNzUtMTguMjAzIDgxLjI1MS00MC40MjIgMTEzLjYyOXoiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Im0yNzIuOTUxIDEzMC4yMTVjMS41OTUtMTUuMzAxIDIuMDY1LTMxLjM4NSAxLjQxMi00OC4yNTEtLjU3Ny0xNC45NTUtMi4wMzYtMzAuNDE3LTQuMzctNDYuMzg1LTUuMzM0IDMuODQzLTEwLjY2NCA3LjE0OC0xNS45ODggOS45MTUtNi44OTMgMy41ODItMTMuNzk3IDYuMjg1LTIwLjcxNCA4LjEwOS0yMC40MzkgMzguMzQ3LTQ3Ljc5MiA2OC45MzItODEuNDc2IDkyLjQwNy0zMi43OTcgMjIuODU5LTcxLjU3OCAzOC45NC0xMTUuNzk4IDQ4Ljg1NSAzLjkyMSAxMC4zMjkgOC41MzYgMjAuMjIxIDEzLjg0OCAyOS42NzcgNS43MDUgMTAuMTYgMTIuMTkyIDE5Ljc4OCAxOS40NTUgMjguODgyIDQxLjM2My05Ljk4MyA3OS4zMDctMjQuNjUzIDExMy4yODQtNDQuNzY0IDM0LjMxLTIwLjMwNiA2NC42MTEtNDYuMTk2IDkwLjM0Ny03OC40NDV6bTExLjA4Ny00OC41OTFjLjY4NSAxNy43MTcuMTQgMzQuNzMxLTEuNjM5IDUxLjAzOGwtLjE1NiAxLjQyNS0uODQ2IDEuMDY5Yy0yNi42NDYgMzMuNjY2LTU4LjEzOSA2MC42NjUtOTMuODgxIDgxLjgxOC0zNS42NSAyMS4xMDEtNzUuNDkgMzYuMzQ1LTExOC45MjcgNDYuNTU3bC0yLjkwNy42ODQtMS45MTItMi4zMjdjLTguNDUtMTAuMjg0LTE1Ljg5NS0yMS4xNTgtMjIuMzMzLTMyLjYyMS02LjQ1LTExLjQ4My0xMS45MjEtMjMuNTk1LTE2LjQxLTM2LjMzMmwtMS44MjktNS4xOTMgNS40MDEtMS4xMzdjNDUuMTkxLTkuNTIzIDg0LjYyMy0yNS40NzggMTE3LjctNDguNTMgMzIuOTY1LTIyLjk3NSA1OS42NDMtNTMuMDQ0IDc5LjQzOS05MC44NjhsMS4wMjktMS45NjYgMi4xNDQtLjUwOWM2Ljg2NS0xLjYyOCAxMy43NDQtNC4yMzQgMjAuNjM2LTcuODE2IDYuOTk2LTMuNjM2IDEzLjk4MS04LjI1MiAyMC45NTYtMTMuODQ3bDYuNDU2LTUuMTc5IDEuMzI4IDguMTY1YzMuMTQ5IDE5LjM3IDUuMDY4IDM3Ljg5NCA1Ljc1MSA1NS41Njl6IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJtNTkuMTI0IDExNy45Mzd2MS4zODdoLTIwLjcwM3YtMS4zODZoMS43MTRjMS45OTQgMCAzLjQ0LS42MTcgNC4zNC0xLjg1LjU3MS0uNzk2Ljg2My0yLjczNi44NjMtNS43OTJ2LTMyLjk2NGMwLTIuNTgyLS4xNTgtNC4yOS0uNDYyLTUuMTExLS4yNDMtLjYzLS43MjktMS4xNy0xLjQ1OS0xLjYxOS0xLjA0NS0uNjAzLTIuMTM5LS44OTktMy4yODItLjg5OWgtMS43MTR2LTEuNGgyMC43MDN2MS40aC0xLjc1Yy0xLjk3IDAtMy40MDQuNjE3LTQuMzAzIDEuODM3LS41OTYuODA5LS45IDIuNzM1LS45IDUuNzkydjMyLjk2NGMwIDIuNTgxLjE1OCA0LjI5LjQ2MSA1LjExMS4yNDQuNjI5Ljc0MiAxLjE2OSAxLjQ5NSAxLjYxOCAxLjAyMS42MDQgMi4xMDQuOTEyIDMuMjQ2LjkxMnoiLz48cGF0aCBkPSJtNzguMzggNzEuMDl2MjAuMDZoOC43OWMyLjAxOCAwIDMuNTAxLS40NzYgNC40MzgtMS40MTMuOTM2LS45MzcgMS41NTYtMi44IDEuODcyLTUuNTg2aDEuMzEzdjE3LjI1OWgtMS4zMTNjLS4wMjUtMS45NzgtLjI2OC0zLjQyOC0uNzMtNC4zNTMtLjQ2Mi0uOTM3LTEuMTA2LTEuNjMxLTEuOTMyLTIuMDkzLS44MTUtLjQ2Mi0yLjAzMS0uNjk0LTMuNjQ4LS42OTRoLTguNzl2MTYuMDI3YzAgMi41ODEuMTQ3IDQuMjg5LjQ2MyA1LjExMS4yMzEuNjI5LjczIDEuMTY4IDEuNDk1IDEuNjE4IDEuMDQ1LjYwMyAyLjEyNy45MTIgMy4yNy45MTJoMS43NTF2MS4zODZoLTIwLjcyOHYtMS4zODZoMS43MDJjMS45OTQgMCAzLjQ1My0uNjE3IDQuMzUyLTEuODUuNTcyLS43OTYuODUxLTIuNzM2Ljg1MS01Ljc5MnYtMzIuOTY0YzAtMi41ODItLjE1OC00LjI5LS40NjItNS4xMTEtLjI0NC0uNjMtLjcyOS0xLjE3LTEuNDU5LTEuNjE5LTEuMDIxLS42MDMtMi4xMTYtLjg5OS0zLjI4Mi0uODk5aC0xLjcwMnYtMS40aDM1LjkzNmwuNDYyIDExLjIxMWgtMS4yNTJjLS42MDktMi4zNzUtMS4zMzgtNC4xMjItMi4xNTMtNS4yNC0uODE0LTEuMTE3LTEuODIyLTEuOTI2LTMuMDI2LTIuNDI3LTEuMjA0LS41LTMuMDUyLS43NTctNS41NjgtLjc1N3oiLz48cGF0aCBkPSJtMTI4LjM3IDkxLjAzNCAxNy44MSAxOC42OTdjMi45MTcgMy4wODIgNS40MTEgNS4xODggNy40NzcgNi4zMDUgMi4wNjcgMS4xMTcgNC4xMzMgMS43NDcgNi4yIDEuOTAxdjEuMzg3aC0yMi45Nzd2LTEuMzg3YzEuMzczIDAgMi4zNy0uMjQ0IDIuOTc4LS43NDUuNjA4LS40ODguOTEyLTEuMDI3LjkxMi0xLjYzIDAtLjYwNC0uMTIxLTEuMTQzLS4zNC0xLjYxOC0uMjMxLS40NzYtLjk3My0xLjM2MS0yLjIyNS0yLjY3MmwtMTYuNjc5LTE3LjQxM3YxNi40MzdjMCAyLjU4MS4xNTggNC4yOS40NzQgNS4xMTEuMjMxLjYyOS43MyAxLjE2OSAxLjQ5NSAxLjYxOCAxLjAyMS42MDQgMi4wOTEuOTEyIDMuMjM0LjkxMmgxLjY0MXYxLjM4N2gtMjAuNTgxdi0xLjM4N2gxLjcwMmMxLjk5MyAwIDMuNDQtLjYxNiA0LjM1MS0xLjg1LjU3Mi0uNzk2Ljg1Mi0yLjczNS44NTItNS43OTF2LTMyLjk2NWMwLTIuNTgyLS4xNTktNC4zMDItLjQ2Mi01LjE1LS4yNDQtLjYwNC0uNzMtMS4xMy0xLjQ1OS0xLjU3OS0xLjA0Ni0uNjA0LTIuMTQtLjktMy4yODItLjloLTEuNzAydi0xLjM5OWgyMC41ODF2MS4zOTloLTEuNjQxYy0xLjExOCAwLTIuMTg5LjI4NC0zLjIzNC44NjEtLjc0Mi4zOTgtMS4yNTIgMS4wMDEtMS41MzIgMS44MTEtLjI5MS43OTYtLjQzNyAyLjQ1Mi0uNDM3IDQuOTU3djE1LjYxNWMuNDg2LS40NzUgMi4xMDMtMi4wNjggNC44ODctNC43NzYgNy4wNS02LjgyIDExLjMxOC0xMS4zNzkgMTIuNzg5LTEzLjY1Mi42MzItMS4wMDEuOTYtMS44ODcuOTYtMi42MzIgMC0uNTc5LS4yNTYtMS4wOTItLjc1NC0xLjUyOC0uNDk5LS40MzctMS4zMzctLjY1Ni0yLjUyOC0uNjU2aC0xLjEwN3YtMS4zOTloMTcuNzM3djEuMzk5Yy0xLjA0Ni4wMjYtMS45OTMuMTY4LTIuODQ1LjQ1LS44NS4yNjktMS44OTUuODA5LTMuMTM2IDEuNTkyLTEuMjI4Ljc5Ny0yLjc0OCAyLjA2OC00LjU1OSAzLjgyNy0uNTIzLjUwMS0yLjkzIDMuMDY5LTcuMjM0IDcuNzA1eiIvPjxwYXRoIGQ9Im0xMjcuNDA0IDI3OS41NTcgMTcuMTE2IDguMjkzIDkuMDM0IDE3Ljc4OCA4Ljc5NS0xNy43ODggMTcuMzU1LTguMjkzLTE3LjM1NS05LjY1Ny04Ljc5NS0xNi4zNDUtOS4wMzQgMTYuMzQ1eiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTExLjg2NjQgLTEuNDg5MykiLz48L2c+PHBhdGggZD0ibTgxLjM3MSAyMDUuNzUyIDMuMzY5IDExLjAxOCA0LjcyMS0xLjQ0NSA4LjgzOC0xNC43NDkgMTIuMzYxLTMuNzc3LTEyLjUgMTkuNzcgMjMuMTkzIDkuMjYzLTEzLjA3MiA0LjAwMi0xNi44Mi03LjI2Mi00LjUyNyAxLjM4MyAzLjQ2OSAxMS4zNDEtOSAyLjc1LTkuMDMyLTI5LjU0M3oiIGZpbGw9IiMyNTNkOTciIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMS44NjY0IC0xLjQ4OTMpIi8+PHBhdGggZD0ibTk5LjY1MiAxOTQuMzUyIDguNDYtNC4xMjYgNi42NzUgMTMuNjljLjExNS4yMzEuMjMxLjQ3MS4zNDguNzExLjEuMjAxLjE1NS4zMTcuMTYyLjMyNS43OTYgMS42NDYgMS40MjEgMi43NTggMS44NjIgMy4zNTMgMS4xNjYgMS41NzYgMi45MDUgMS45NyA1LjE5OSAxLjE4OSAxLjAyOC0uMzQ3IDIuNTU3LTEuMDE5IDQuNjA1LTIuMDE2IDMuMDI4LTEuNDgzIDUuMTI5LTIuNTY1IDYuMzA0LTMuMjYxIDEuODM5LTEuMDgxIDIuNjU4LTIuMzcxIDIuNDY1LTMuODcxLS4xMzEtLjk3My0uNjM0LTIuMzQ4LTEuNTE1LTQuMTE3bC0xLjE2Ni0yLjQwMy02LjIxMi0xMi43MzIgOC40NDUtNC4xMTggNy4wOTIgMTQuNTQxYzEuNjc3IDMuNDI5IDIuNjgxIDUuODg3IDMuMDIxIDcuMzY5LjY3OSAzLjAyMi0uMjQ3IDUuNzY0LTIuNzkgOC4yMjktMS4yMTIgMS4xOS0zLjExMyAyLjQ0OS01LjY3OCAzLjc4NSAxLjExMi0uNTc5LS45NDMuNDExLTYuMTY1IDIuOTUyLTQuMjggMi4wOTMtNy4zMTcgMy40NjktOS4wODYgNC4xMzMtNC43NDQgMS43NzctOC4zOSAxLjA1OC0xMC45MzktMi4xNDgtMS4wNDQtMS4zMDYtMi4zMS0zLjQ5Mi0zLjgwMi02LjU1MXoiIGZpbGw9IiMyNTNkOTciLz48cGF0aCBkPSJtMTYyLjE3NSAxNjkuMTc5IDIwLjgxNCAxMC42ODQtMi4xNjItMjMuMjcgMTIuMjkxLTguMjg5IDE3LjI3NSAyNS42MS03LjYxNyA1LjEzOC0xMi45NjUtMjAuMDI1IDEuOTk0IDI3LjQyNy02LjIzNiA0LjIwMy0yNC41MTQtMTIuMjMxIDEzLjU0NCAxOS42MzItNy41MjUgNS4wNzYtMTcuMjc1LTI1LjYxMnoiIGZpbGw9IiMyNTNkOTciIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMS44NjY0IC0xLjQ4OTMpIi8+PHBhdGggZD0ibTIwMy4yMjQgMTM4Ljc5MiAxNC45NTcgMTcuODI1IDE2LjI5My0xMy42NzYgNC45MDcgNS44NDEtMjMuNTExIDE5LjcyNS0xOS44NTQtMjMuNjY1eiIgZmlsbD0iIzI1M2Q5NyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTExLjg2NjQgLTEuNDg5MykiLz48cGF0aCBkPSJtMjMwLjA0IDE0NS4yNjEtMTAuMTUtMzMuOTU0IDguNzYtOS4wNzEgMzMuOTYyIDkuMzAyLTcuMTQ0IDcuMzk0LTYuMTA0LTEuNjIzLTEzLjg2IDE0LjM0NyAxLjkyMyA1Ljk1NnptMy4yMDgtMjAuNTEyIDkuMjQ3LTkuNTgtMTMuNTQzLTMuNzA5eiIgZmlsbD0iIzI1M2Q5NyIvPjwvZz48L3N2Zz4=" alt="IFK Kumla">
                 <div class="club-copy">
                     <span class="club-title">IFK Kumla</span>
-                    <span class="club-sub">FotbollstrÃ¤naren v7.6</span>
+                    <span class="club-sub">Fotbollstränaren v7.7</span>
                 </div>
             </div>
             <div class="tabs">
@@ -102,10 +108,10 @@
                 <button class="tab-btn" onclick="switchTab('matches', event)">Matcher</button>
                 <button class="tab-btn" onclick="switchTab('tactics', event)">Taktik</button>
             </div>
-            <div id="sync-status">Ansluter till Google...</div>
+            <div id="sync-status">Ansluter till GitHub...</div>
             <div id="last-saved">Senast sparat: --</div>
-            <div style="text-align:center; background:#1e293b; padding-bottom:4px;">
-                <span style="font-size:0.7rem; color:#38bdf8; cursor:pointer; text-decoration:underline;" onclick="changeToken()">Byt/Anges GitHub-token</span>
+            <div style="text-align:center; background:var(--ifk-blue-dark); padding-bottom:6px;">
+                <span style="font-size:0.7rem; color:#c7d2fe; cursor:pointer; text-decoration:underline;" onclick="changeToken()">Byt/Ange GitHub-token</span>
             </div>
 
             <div id="tab-teams" class="tab-content active">
@@ -117,7 +123,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="team-select">VÃ¤lj aktivt lag:</label>
+                    <label for="team-select">Välj aktivt lag:</label>
                     <select id="team-select" onchange="selectTeam()"></select>
                     <div class="btn-group" id="team-controls" style="margin-top: 8px; display: none;">
                         <button class="btn-secondary" style="flex:1" onclick="editTeamName()">Byt namn</button>
@@ -131,8 +137,8 @@
                     <h3>Spelare i <span id="current-team-title"></span></h3>
                     <div class="form-group"><input type="text" id="player-name" placeholder="Spelarens namn"></div>
                     <div class="form-group">
-                        <input type="number" id="player-number" placeholder="TrÃ¶jnummer">
-                        <button class="btn-primary" onclick="addPlayer()">LÃ¤gg till spelare</button>
+                        <input type="number" id="player-number" placeholder="Tröjnummer">
+                        <button class="btn-primary" onclick="addPlayer()">Lägg till spelare</button>
                     </div>
                     <div id="player-list"></div>
                 </div>
@@ -141,12 +147,12 @@
             <div id="tab-matches" class="tab-content">
                 <h2>Matcher</h2>
                 <div class="form-group">
-                    <label for="match-team-select">VÃ¤lj Mitt Lag:</label>
+                    <label for="match-team-select">Välj Mitt Lag:</label>
                     <select id="match-team-select"></select>
                 </div>
                 <div class="form-group">
-                    <label for="match-opponent">MotstÃ¥ndare:</label>
-                    <input type="text" id="match-opponent" placeholder="Ex. MotstÃ¥ndarlaget">
+                    <label for="match-opponent">Motståndare:</label>
+                    <input type="text" id="match-opponent" placeholder="Ex. Motståndarlaget">
                 </div>
                 <div class="form-group">
                     <label for="match-type">Spelform:</label>
@@ -196,7 +202,7 @@
                     <img id="club-logo-small" src="data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjIiIHZpZXdCb3g9IjAgMCA1NjAgNDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxnIHRyYW5zZm9ybT0ibWF0cml4KC43OTY3NDQgMCAwIC43OTY3NDQgMTYyLjg3OSA2NC45OTE4KSI+PHBhdGggZD0ibTE0Ny4wMDUgMzIyLjQ1NWM3Ny43ODQtNDEuNzQ1IDEyMS4zMTUtMTA1LjE4IDEzMC41OTUtMTkwLjMwMyAzLjQ5Mi0zMi4wMzYgMi4xMzMtNjcuMTQ0LTQuMDc0LTEwNS4zMjItMTQuNSAxMS42MzEtMjkgMTkuMTY4LTQzLjUgMjIuNjA3LTI3LjY4MSA2LjU2Ni01NS4zNjItMS43OTgtODMuMDQzLTI1LjA5LTM5LjQzNyAzNC45MzItODEuOTI0IDMxLjc0OC0xMjYuNDk4IDIuNDgzLTEwLjI5IDYzLjI2OC03LjI1NyAxMTguMTAxIDkuMDk2IDE2NC40OTggOC43ODkgMjQuOTM2IDIxLjQyNiA0Ny40MzUgMzcuOTExIDY3LjQ5OSAyMC41MzQgMjQuOTg5IDQ3LjAzOSA0Ni4xOTkgNzkuNTEzIDYzLjYyOHoiIGZpbGw9IiMyNTNkOTciLz48cGF0aCBkPSJtMTQ3LjAwNyAzMDUuOTA1YzMzLjU0Ni0xOS4xMTIgNTkuODg3LTQyLjYxMiA3OS4wMjMtNzAuNDk4IDIwLjQwNy0yOS43MzcgMzIuNzk3LTY0LjY2NiAzNy4xNzItMTA0Ljc4NiAxLjY1Mi0xNS4xNDkgMi4xNDgtMzEuMjU2IDEuNDg3LTQ4LjMxNy0uMzg0LTkuOTQxLTEuMTU2LTIwLjA2LTIuMzEtMzAuMzU2LTEuMzA3LjczOS0yLjYxMSAxLjQ0Ni0zLjkxNCAyLjEyNS04LjMyMiA0LjMyNC0xNi42ODcgNy40ODQtMjUuMDk1IDkuNDc4LTE2LjM3NiAzLjg4My0zMi43MyAzLjM2LTQ5LjA2LTEuNTc1LTEyLjU0Mi0zLjc4OS0yNC45NDktMTAuMTU0LTM3LjIyMi0xOS4wOTYtMTkuNzIgMTQuNjUtNDAuMjUyIDIxLjM4MS02MS40ODUgMjEuMjkzLTE3Ljc4NS0uMDczLTM1LjcxNy00Ljk2NS01My43NzYtMTQuMDA3LTIuNjQxIDIyLjYxMy0zLjM5OSA0NC4wOTYtMi4yNzQgNjQuNDQ2IDEuNDQ0IDI2LjE0MiA2LjAwNyA1MC4xMDggMTMuNjg4IDcxLjg5OCA0LjEwOSAxMS42NTkgOS4xMjYgMjIuNzYyIDE1LjA1IDMzLjMwOCA1Ljk1OSAxMC42MSAxMi43NDggMjAuNTUxIDIwLjM2NyAyOS44MjQgOS41MDUgMTEuNTY5IDIwLjU2NiAyMi40MDEgMzMuMTgyIDMyLjQ5NiAxMC43NTcgOC42MSAyMi40OCAxNi41MzEgMzUuMTY3IDIzLjc2N3ptMTAyLjk0NC01NC4xNzJjLTIzLjEwOCAzMy42NzMtNTUuMTM2IDYxLjQ5OC05Ni4wODggODMuNDc2bC02Ljg1OCAzLjY4MS02Ljg1OC0zLjY4MWMtMTcuMTI5LTkuMTkzLTMyLjYxMS0xOS4zMjYtNDYuNDQ2LTMwLjM5NS0xMy44ODgtMTEuMTE1LTI2LjM0OC0yMy4zODQtMzcuMzc1LTM2LjgwNC04Ljg2Ni0xMC43OTEtMTYuNjM5LTIyLjEzMS0yMy4zMTctMzQuMDE5LTYuNzEzLTExLjk1Mi0xMi40MTEtMjQuNTY4LTE3LjA4OS0zNy44NDQtOC42NzMtMjQuNjA3LTEzLjgwNC01MS4yNTgtMTUuMzg5LTc5Ljk0OC0xLjU2My0yOC4yNzQuMzI3LTU4LjgzOSA1LjY3LTkxLjY5M2wzLjU5MS0yMi4wNzYgMTguNjg3IDEyLjI2OWMxOS45NjYgMTMuMTEgMzkuMTEgMjAuMzc2IDU3LjIzOCAyMC40NTIgMTcuNTg5LjA3MyAzNC44MzktNi43MDkgNTEuNjg3LTIxLjYzMmw5LjM4Ny04LjMxNSA5LjU0NSA4LjAzMmMxMi4zMzMgMTAuMzc4IDI0LjQ1NSAxNy4zNjcgMzYuMzYzIDIwLjk2NSAxMS4zNTEgMy40MjkgMjIuNjc4IDMuODAzIDMzLjk4NCAxLjEyMSA2LjA5LTEuNDQ0IDEyLjIyNi0zLjc3MyAxOC40MDQtNi45ODUgNi40ODgtMy4zNzEgMTIuOTQ1LTcuNjM1IDE5LjM2OS0xMi43ODhsMTkuMzctMTUuNTM5IDMuOTgzIDI0LjQ5NWMzLjI0MiAxOS45MzIgNS4yMSAzOC44NTkgNS45MDMgNTYuNzc5LjY5OSAxOC4wNDYuMTI1IDM1LjUxMy0xLjcxNCA1Mi4zOTgtNC45MDcgNDUuMDAzLTE4LjkyMyA4NC4zNTMtNDIuMDQ3IDExOC4wNTF6IiBmaWxsPSIjMjUzZDk3IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJtMjc3LjYgMTMyLjE1MmMzLjQ5Mi0zMi4wMzYgMi4xMzMtNjcuMTQ0LTQuMDc0LTEwNS4zMjItMTQuNSAxMS42MzEtMjkgMTkuMTY4LTQzLjUgMjIuNjA3LTQwLjM0MyA3Ny4wOC0xMDguNzYxIDEyMi41NzItMjAwLjQ0NSAxNDEuODkxIDguNzg5IDI0LjkzNiAyMS40MjYgNDcuNDM1IDM3LjkxMSA2Ny40OTkgODUuOTQtMjAuMjA0IDE1Ny41NDEtNjAuMjYzIDIxMC4xMDgtMTI2LjY3NXoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJtMjcwLjM5MyAxMjkuMTUyYzEuNTEyLTE0LjkxMiAxLjk0OC0zMC42MTEgMS4zMS00Ny4wOTQtLjUyNS0xMy41NS0xLjc2OS0yNy40OTMtMy43MzItNDEuODI4LTQuMjUxIDIuODc4LTguNDk4IDUuNDE5LTEyLjc0IDcuNjIzLTYuNjk2IDMuNDgxLTEzLjQxMiA2LjE1NS0yMC4xNDEgOC4wMTktMjAuNTgzIDM4LjI1Mi00OC4wMjYgNjguODEyLTgxLjc1OCA5Mi4zMi0zMi4zMzMgMjIuNTM1LTcwLjQxMiAzOC41MzctMTEzLjcyOSA0OC41NzggMy42MjggOS4xNzggNy44MiAxOC4wMDMgMTIuNTc5IDI2LjQ3NCA1LjM2NyA5LjU1NiAxMS40MTkgMTguNjIyIDE4LjE1NiAyNy4xOTkgNDAuNDc1LTkuOTExIDc3LjYyMS0yNC4zNjQgMTEwLjkxNS00NC4wNjkgMzMuODExLTIwLjAxIDYzLjcwNC00NS41IDg5LjE0LTc3LjIyMnptMTYuMzA0LTQ3LjYyMmMuNjkxIDE3LjgwOC4xMzYgMzQuOTQ1LTEuNjU5IDUxLjQxM2wtLjI0IDIuMjA5LTEuMzExIDEuNjU2Yy0yNi44NDggMzMuOTE5LTU4LjU5IDYxLjEyOC05NC42MTggODIuNDUyLTM1Ljg5MSAyMS4yNDMtNzUuOTgxIDM2LjU4NS0xMTkuNjc4IDQ2Ljg1OWwtNC41MDQgMS4wNTgtMi45NjQtMy42MDZjLTguNTY0LTEwLjQyMy0xNi4wOTktMjEuNDI1LTIyLjYwMy0zMy4wMDYtNi41MjMtMTEuNjE0LTEyLjA1Ni0yMy44NjQtMTYuNTk3LTM2Ljc0N2wtMi44MzYtOC4wNDggOC4zNzItMS43NjRjNDQuODM0LTkuNDQ4IDgzLjkzOS0yNS4yNjYgMTE2LjcyMi00OC4xMTQgMzIuNjEzLTIyLjcyOSA1OS4wMDgtNTIuNDgxIDc4LjU5Ny04OS45MTJsMS41OTYtMy4wNDggMy4zMjQtLjc4OGM2LjY1MS0xLjU3OCAxMy4zMjctNC4xMDcgMjAuMDIxLTcuNTg3IDYuODU3LTMuNTYzIDEzLjY5Ni04LjA4MiAyMC41MjEtMTMuNTU2bDEwLjAwNy04LjAyOCAyLjA1OCAxMi42NTVjMy4xNzYgMTkuNTI2IDUuMTA3IDM4LjE2MiA1Ljc5MiA1NS45MDJ6IiBmaWxsPSIjMjUzZDk3IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48ZyBmaWxsPSIjZmZmIj48cGF0aCBkPSJtMTQ3LjAwMyAzMTYuOTYzYzM3LjEwOC0yMC4zMDEgNjYuMTEtNDUuNjcxIDg3LTc2LjExNSAyMS4zMTMtMzEuMDU2IDM0LjI0Ni02Ny40NTkgMzguNzk2LTEwOS4yMDcgMS43MTYtMTUuNzI3IDIuMjM3LTMyLjI4NyAxLjU2My00OS42NzctLjU3Ni0xNC45NTUtMi4wMzUtMzAuNDE3LTQuMzctNDYuMzg1LTUuMzMzIDMuODQzLTEwLjY2NCA3LjE0OC0xNS45ODggOS45MTUtNy42MDUgMy45NTMtMTUuMjI4IDYuODM2LTIyLjg2NCA4LjY0Ny0xNC42ODYgMy40ODMtMjkuMzY1IDMuMDA5LTQ0LjAzNC0xLjQyNC0xMy40MTctNC4wNTMtMjYuNzc2LTExLjQwOC00MC4wNzEtMjIuMDYzLTE5LjcxNiAxNi40MzQtNDAuMjIxIDIzLjkzMy02MS4zOTQgMjMuODQ1LTIwLjEwMi0uMDgzLTQwLjYzMi03LjAyMy02MS41MTktMTkuNjUxLTQuMjEyIDI4LjUwNy01LjYyNiA1NS4yNzEtNC4yNDMgODAuMjkzIDEuNDkyIDI2Ljk5MSA2LjI0NCA1MS44NTMgMTQuMjU0IDc0LjU4MiA0LjMgMTIuMTk4IDkuNTQzIDIzLjgwNSAxNS43MyAzNC44MiA2LjE5OSAxMS4wMzYgMTMuMzE2IDIxLjQ0NCAyMS4zNTEgMzEuMjIyIDEwLjAxNCAxMi4xODcgMjEuNTQxIDIzLjQ5OCAzNC41OCAzMy45MzIgMTIuNDI5IDkuOTQ3IDI2LjE2NiAxOS4wMzUgNDEuMjA5IDI3LjI2NnptOTQuOTc0LTcwLjY3MmMtMjIuMjEyIDMyLjM2OS01My4xMDkgNTkuMTc1LTkyLjY4NiA4MC40MTVsLTIuMjg2IDEuMjI3LTIuMjg2LTEuMjI3Yy0xNi41MzQtOC44NzMtMzEuNTI1LTE4LjY5MS00NC45NzItMjkuNDUxLTEzLjQ2NS0xMC43NzYtMjUuNDU4LTIyLjU2NS0zNS45NzgtMzUuMzY3LTguNDQ5LTEwLjI4NC0xNS44OTUtMjEuMTU4LTIyLjMzMy0zMi42MjEtNi40NS0xMS40ODMtMTEuOTItMjMuNTk1LTE2LjQwOS0zNi4zMzItOC4zNDMtMjMuNjY5LTEzLjI4NC00OS40MjQtMTQuODIzLTc3LjI2NC0xLjUzMS0yNy43MDIuMzA5LTU3LjU3NCA1LjUxOS04OS42MTVsMS4xOTctNy4zNTkgNi4yMjkgNC4wOWMyMS41MTQgMTQuMTI1IDQyLjQwNiAyMS45NTYgNjIuNTMgMjIuMDM5IDE5Ljk0NS4wODIgMzkuMzQ5LTcuNDcgNTguMTEtMjQuMDg4bDMuMTMtMi43NzIgMy4xODEgMi42NzdjMTMuMzM5IDExLjIyNCAyNi42MDcgMTguODMgMzkuODAyIDIyLjgxNyAxMy4wMTIgMy45MzEgMjYuMDE0IDQuMzU1IDM5LjAwOCAxLjI3MyA2Ljg2NS0xLjYyOCAxMy43NDUtNC4yMzQgMjAuNjM3LTcuODE2IDYuOTk1LTMuNjM2IDEzLjk4LTguMjUyIDIwLjk1NS0xMy44NDdsNi40NTYtNS4xNzkgMS4zMjkgOC4xNjVjMy4xNDkgMTkuMzcgNS4wNjggMzcuODk0IDUuNzUxIDU1LjU2OS42ODUgMTcuNzE3LjE0IDM0LjczLTEuNjM5IDUxLjAzNy00LjcyOCA0My4zNzUtMTguMjAzIDgxLjI1MS00MC40MjIgMTEzLjYyOXoiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Im0yNzIuOTUxIDEzMC4yMTVjMS41OTUtMTUuMzAxIDIuMDY1LTMxLjM4NSAxLjQxMi00OC4yNTEtLjU3Ny0xNC45NTUtMi4wMzYtMzAuNDE3LTQuMzctNDYuMzg1LTUuMzM0IDMuODQzLTEwLjY2NCA3LjE0OC0xNS45ODggOS45MTUtNi44OTMgMy41ODItMTMuNzk3IDYuMjg1LTIwLjcxNCA4LjEwOS0yMC40MzkgMzguMzQ3LTQ3Ljc5MiA2OC45MzItODEuNDc2IDkyLjQwNy0zMi43OTcgMjIuODU5LTcxLjU3OCAzOC45NC0xMTUuNzk4IDQ4Ljg1NSAzLjkyMSAxMC4zMjkgOC41MzYgMjAuMjIxIDEzLjg0OCAyOS42NzcgNS43MDUgMTAuMTYgMTIuMTkyIDE5Ljc4OCAxOS40NTUgMjguODgyIDQxLjM2My05Ljk4MyA3OS4zMDctMjQuNjUzIDExMy4yODQtNDQuNzY0IDM0LjMxLTIwLjMwNiA2NC42MTEtNDYuMTk2IDkwLjM0Ny03OC40NDV6bTExLjA4Ny00OC41OTFjLjY4NSAxNy43MTcuMTQgMzQuNzMxLTEuNjM5IDUxLjAzOGwtLjE1NiAxLjQyNS0uODQ2IDEuMDY5Yy0yNi42NDYgMzMuNjY2LTU4LjEzOSA2MC42NjUtOTMuODgxIDgxLjgxOC0zNS42NSAyMS4xMDEtNzUuNDkgMzYuMzQ1LTExOC45MjcgNDYuNTU3bC0yLjkwNy42ODQtMS45MTItMi4zMjdjLTguNDUtMTAuMjg0LTE1Ljg5NS0yMS4xNTgtMjIuMzMzLTMyLjYyMS02LjQ1LTExLjQ4My0xMS45MjEtMjMuNTk1LTE2LjQxLTM2LjMzMmwtMS44MjktNS4xOTMgNS40MDEtMS4xMzdjNDUuMTkxLTkuNTIzIDg0LjYyMy0yNS40NzggMTE3LjctNDguNTMgMzIuOTY1LTIyLjk3NSA1OS42NDMtNTMuMDQ0IDc5LjQzOS05MC44NjhsMS4wMjktMS45NjYgMi4xNDQtLjUwOWM2Ljg2NS0xLjYyOCAxMy43NDQtNC4yMzQgMjAuNjM2LTcuODE2IDYuOTk2LTMuNjM2IDEzLjk4MS04LjI1MiAyMC45NTYtMTMuODQ3bDYuNDU2LTUuMTc5IDEuMzI4IDguMTY1YzMuMTQ5IDE5LjM3IDUuMDY4IDM3Ljg5NCA1Ljc1MSA1NS41Njl6IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJtNTkuMTI0IDExNy45Mzd2MS4zODdoLTIwLjcwM3YtMS4zODZoMS43MTRjMS45OTQgMCAzLjQ0LS42MTcgNC4zNC0xLjg1LjU3MS0uNzk2Ljg2My0yLjczNi44NjMtNS43OTJ2LTMyLjk2NGMwLTIuNTgyLS4xNTgtNC4yOS0uNDYyLTUuMTExLS4yNDMtLjYzLS43MjktMS4xNy0xLjQ1OS0xLjYxOS0xLjA0NS0uNjAzLTIuMTM5LS44OTktMy4yODItLjg5OWgtMS43MTR2LTEuNGgyMC43MDN2MS40aC0xLjc1Yy0xLjk3IDAtMy40MDQuNjE3LTQuMzAzIDEuODM3LS41OTYuODA5LS45IDIuNzM1LS45IDUuNzkydjMyLjk2NGMwIDIuNTgxLjE1OCA0LjI5LjQ2MSA1LjExMS4yNDQuNjI5Ljc0MiAxLjE2OSAxLjQ5NSAxLjYxOCAxLjAyMS42MDQgMi4xMDQuOTEyIDMuMjQ2LjkxMnoiLz48cGF0aCBkPSJtNzguMzggNzEuMDl2MjAuMDZoOC43OWMyLjAxOCAwIDMuNTAxLS40NzYgNC40MzgtMS40MTMuOTM2LS45MzcgMS41NTYtMi44IDEuODcyLTUuNTg2aDEuMzEzdjE3LjI1OWgtMS4zMTNjLS4wMjUtMS45NzgtLjI2OC0zLjQyOC0uNzMtNC4zNTMtLjQ2Mi0uOTM3LTEuMTA2LTEuNjMxLTEuOTMyLTIuMDkzLS44MTUtLjQ2Mi0yLjAzMS0uNjk0LTMuNjQ4LS42OTRoLTguNzl2MTYuMDI3YzAgMi41ODEuMTQ3IDQuMjg5LjQ2MyA1LjExMS4yMzEuNjI5LjczIDEuMTY4IDEuNDk1IDEuNjE4IDEuMDQ1LjYwMyAyLjEyNy45MTIgMy4yNy45MTJoMS43NTF2MS4zODZoLTIwLjcyOHYtMS4zODZoMS43MDJjMS45OTQgMCAzLjQ1My0uNjE3IDQuMzUyLTEuODUuNTcyLS43OTYuODUxLTIuNzM2Ljg1MS01Ljc5MnYtMzIuOTY0YzAtMi41ODItLjE1OC00LjI5LS40NjItNS4xMTEtLjI0NC0uNjMtLjcyOS0xLjE3LTEuNDU5LTEuNjE5LTEuMDIxLS42MDMtMi4xMTYtLjg5OS0zLjI4Mi0uODk5aC0xLjcwMnYtMS40aDM1LjkzNmwuNDYyIDExLjIxMWgtMS4yNTJjLS42MDktMi4zNzUtMS4zMzgtNC4xMjItMi4xNTMtNS4yNC0uODE0LTEuMTE3LTEuODIyLTEuOTI2LTMuMDI2LTIuNDI3LTEuMjA0LS41LTMuMDUyLS43NTctNS41NjgtLjc1N3oiLz48cGF0aCBkPSJtMTI4LjM3IDkxLjAzNCAxNy44MSAxOC42OTdjMi45MTcgMy4wODIgNS40MTEgNS4xODggNy40NzcgNi4zMDUgMi4wNjcgMS4xMTcgNC4xMzMgMS43NDcgNi4yIDEuOTAxdjEuMzg3aC0yMi45Nzd2LTEuMzg3YzEuMzczIDAgMi4zNy0uMjQ0IDIuOTc4LS43NDUuNjA4LS40ODguOTEyLTEuMDI3LjkxMi0xLjYzIDAtLjYwNC0uMTIxLTEuMTQzLS4zNC0xLjYxOC0uMjMxLS40NzYtLjk3My0xLjM2MS0yLjIyNS0yLjY3MmwtMTYuNjc5LTE3LjQxM3YxNi40MzdjMCAyLjU4MS4xNTggNC4yOS40NzQgNS4xMTEuMjMxLjYyOS43MyAxLjE2OSAxLjQ5NSAxLjYxOCAxLjAyMS42MDQgMi4wOTEuOTEyIDMuMjM0LjkxMmgxLjY0MXYxLjM4N2gtMjAuNTgxdi0xLjM4N2gxLjcwMmMxLjk5MyAwIDMuNDQtLjYxNiA0LjM1MS0xLjg1LjU3Mi0uNzk2Ljg1Mi0yLjczNS44NTItNS43OTF2LTMyLjk2NWMwLTIuNTgyLS4xNTktNC4zMDItLjQ2Mi01LjE1LS4yNDQtLjYwNC0uNzMtMS4xMy0xLjQ1OS0xLjU3OS0xLjA0Ni0uNjA0LTIuMTQtLjktMy4yODItLjloLTEuNzAydi0xLjM5OWgyMC41ODF2MS4zOTloLTEuNjQxYy0xLjExOCAwLTIuMTg5LjI4NC0zLjIzNC44NjEtLjc0Mi4zOTgtMS4yNTIgMS4wMDEtMS41MzIgMS44MTEtLjI5MS43OTYtLjQzNyAyLjQ1Mi0uNDM3IDQuOTU3djE1LjYxNWMuNDg2LS40NzUgMi4xMDMtMi4wNjggNC44ODctNC43NzYgNy4wNS02LjgyIDExLjMxOC0xMS4zNzkgMTIuNzg5LTEzLjY1Mi42MzItMS4wMDEuOTYtMS44ODcuOTYtMi42MzIgMC0uNTc5LS4yNTYtMS4wOTItLjc1NC0xLjUyOC0uNDk5LS40MzctMS4zMzctLjY1Ni0yLjUyOC0uNjU2aC0xLjEwN3YtMS4zOTloMTcuNzM3djEuMzk5Yy0xLjA0Ni4wMjYtMS45OTMuMTY4LTIuODQ1LjQ1LS44NS4yNjktMS44OTUuODA5LTMuMTM2IDEuNTkyLTEuMjI4Ljc5Ny0yLjc0OCAyLjA2OC00LjU1OSAzLjgyNy0uNTIzLjUwMS0yLjkzIDMuMDY5LTcuMjM0IDcuNzA1eiIvPjxwYXRoIGQ9Im0xMjcuNDA0IDI3OS41NTcgMTcuMTE2IDguMjkzIDkuMDM0IDE3Ljc4OCA4Ljc5NS0xNy43ODggMTcuMzU1LTguMjkzLTE3LjM1NS05LjY1Ny04Ljc5NS0xNi4zNDUtOS4wMzQgMTYuMzQ1eiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTExLjg2NjQgLTEuNDg5MykiLz48L2c+PHBhdGggZD0ibTgxLjM3MSAyMDUuNzUyIDMuMzY5IDExLjAxOCA0LjcyMS0xLjQ0NSA4LjgzOC0xNC43NDkgMTIuMzYxLTMuNzc3LTEyLjUgMTkuNzcgMjMuMTkzIDkuMjYzLTEzLjA3MiA0LjAwMi0xNi44Mi03LjI2Mi00LjUyNyAxLjM4MyAzLjQ2OSAxMS4zNDEtOSAyLjc1LTkuMDMyLTI5LjU0M3oiIGZpbGw9IiMyNTNkOTciIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMS44NjY0IC0xLjQ4OTMpIi8+PHBhdGggZD0ibTk5LjY1MiAxOTQuMzUyIDguNDYtNC4xMjYgNi42NzUgMTMuNjljLjExNS4yMzEuMjMxLjQ3MS4zNDguNzExLjEuMjAxLjE1NS4zMTcuMTYyLjMyNS43OTYgMS42NDYgMS40MjEgMi43NTggMS44NjIgMy4zNTMgMS4xNjYgMS41NzYgMi45MDUgMS45NyA1LjE5OSAxLjE4OSAxLjAyOC0uMzQ3IDIuNTU3LTEuMDE5IDQuNjA1LTIuMDE2IDMuMDI4LTEuNDgzIDUuMTI5LTIuNTY1IDYuMzA0LTMuMjYxIDEuODM5LTEuMDgxIDIuNjU4LTIuMzcxIDIuNDY1LTMuODcxLS4xMzEtLjk3My0uNjM0LTIuMzQ4LTEuNTE1LTQuMTE3bC0xLjE2Ni0yLjQwMy02LjIxMi0xMi43MzIgOC40NDUtNC4xMTggNy4wOTIgMTQuNTQxYzEuNjc3IDMuNDI5IDIuNjgxIDUuODg3IDMuMDIxIDcuMzY5LjY3OSAzLjAyMi0uMjQ3IDUuNzY0LTIuNzkgOC4yMjktMS4yMTIgMS4xOS0zLjExMyAyLjQ0OS01LjY3OCAzLjc4NSAxLjExMi0uNTc5LS45NDMuNDExLTYuMTY1IDIuOTUyLTQuMjggMi4wOTMtNy4zMTcgMy40NjktOS4wODYgNC4xMzMtNC43NDQgMS43NzctOC4zOSAxLjA1OC0xMC45MzktMi4xNDgtMS4wNDQtMS4zMDYtMi4zMS0zLjQ5Mi0zLjgwMi02LjU1MXoiIGZpbGw9IiMyNTNkOTciLz48cGF0aCBkPSJtMTYyLjE3NSAxNjkuMTc5IDIwLjgxNCAxMC42ODQtMi4xNjItMjMuMjcgMTIuMjkxLTguMjg5IDE3LjI3NSAyNS42MS03LjYxNyA1LjEzOC0xMi45NjUtMjAuMDI1IDEuOTk0IDI3LjQyNy02LjIzNiA0LjIwMy0yNC41MTQtMTIuMjMxIDEzLjU0NCAxOS42MzItNy41MjUgNS4wNzYtMTcuMjc1LTI1LjYxMnoiIGZpbGw9IiMyNTNkOTciIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xMS44NjY0IC0xLjQ4OTMpIi8+PHBhdGggZD0ibTIwMy4yMjQgMTM4Ljc5MiAxNC45NTcgMTcuODI1IDE2LjI5My0xMy42NzYgNC45MDcgNS44NDEtMjMuNTExIDE5LjcyNS0xOS44NTQtMjMuNjY1eiIgZmlsbD0iIzI1M2Q5NyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTExLjg2NjQgLTEuNDg5MykiLz48cGF0aCBkPSJtMjMwLjA0IDE0NS4yNjEtMTAuMTUtMzMuOTU0IDguNzYtOS4wNzEgMzMuOTYyIDkuMzAyLTcuMTQ0IDcuMzk0LTYuMTA0LTEuNjIzLTEzLjg2IDE0LjM0NyAxLjkyMyA1Ljk1NnptMy4yMDgtMjAuNTEyIDkuMjQ3LTkuNTgtMTMuNTQzLTMuNzA5eiIgZmlsbD0iIzI1M2Q5NyIvPjwvZz48L3N2Zz4=" alt="IFK Kumla">
                     <div class="match-info-box">
                         <div id="display-match-title">Ingen match vald</div>
-                        <span id="display-match-info">VÃ¤lj eller skapa en match i menyn</span>
+                        <span id="display-match-info">Välj eller skapa en match i menyn</span>
                     </div>
                 </div>
             </div>
@@ -211,7 +217,7 @@
             </div>
 
             <div id="bench-area">
-                <h4>AvbytarbÃ¤nk</h4>
+                <h4>Avbytarbänk</h4>
                 <div class="bench-slots" id="bench-slots"></div>
             </div>
         </div>
@@ -219,24 +225,24 @@
 
     <script>
         // ====== GITHUB KONFIGURATION ======
-        // Filen lÃ¤ses utan token (repo Ã¤r publikt). FÃ¶r att SPARA krÃ¤vs en token.
-        // Token SPARAS ALDRIG i denna fil - den lÃ¤ggs i webblÃ¤sarens minne (localStorage)
-        // av varje trÃ¤nare en gÃ¥ng. Annars Ã¥terkallar GitHub token automatiskt!
+        // Filen läses utan token (repo är publikt). För att SPARA krävs en token.
+        // Token SPARAS ALDRIG i denna fil - den läggs i webbläsarens minne (localStorage)
+        // av varje tränare en gång. Annars återkallar GitHub token automatiskt!
         // Skapa token: Settings -> Developer settings -> Fine-grained tokens
-        // RÃ¤ttigheter: Endast detta repo, Contents: Read and write.
-        const GITHUB_OWNER  = 'bo1cjek';              // GitHub-anvÃ¤ndarnamn
+        // Rättigheter: Endast detta repo, Contents: Read and write.
+        const GITHUB_OWNER  = 'bo1cjek';              // GitHub-användarnamn
         const GITHUB_REPO   = 'Fotbollstranaren';     // Repo-namn
         const GITHUB_BRANCH = 'main';                 // eller 'master' - kolla i ditt repo!
         const DATA_FILE     = 'data.json';
         const TOKEN_KEY = 'ft_github_token';
 
-        // HÃ¤mta token frÃ¥n webblÃ¤sarens minne
+        // Hämta token från webbläsarens minne
         let GITHUB_TOKEN = localStorage.getItem(TOKEN_KEY) || '';
 
-        // Be trÃ¤naren att ange token om den inte finns
+        // Be tränaren att ange token om den inte finns
         function ensureToken() {
             if (GITHUB_TOKEN) return GITHUB_TOKEN;
-            const t = prompt('Ange GitHub-token fÃ¶r att kunna spara (ges av huvudtrÃ¤naren):');
+            const t = prompt('Ange GitHub-token för att kunna spara (ges av huvudtränaren):');
             if (t && t.trim()) {
                 GITHUB_TOKEN = t.trim();
                 localStorage.setItem(TOKEN_KEY, GITHUB_TOKEN);
@@ -244,22 +250,22 @@
             return GITHUB_TOKEN;
         }
 
-        // LÃ¥t trÃ¤naren byta/ta bort token i webblÃ¤sarens minne
+        // Låt tränaren byta/ta bort token i webbläsarens minne
         function changeToken() {
-            const action = confirm('Token finns sparad i denna webblÃ¤sare.\n\nOK = ange en ny token\nAvbryt = radera sparad token');
+            const action = confirm('Token finns sparad i denna webbläsare.\n\nOK = ange en ny token\nAvbryt = radera sparad token');
             if (action) {
                 const t = prompt('Ange ny GitHub-token:');
                 if (t && t.trim()) {
                     GITHUB_TOKEN = t.trim();
                     localStorage.setItem(TOKEN_KEY, GITHUB_TOKEN);
-                    updateStatus('âœ… Token uppdaterad', '#4ade80');
+                    updateStatus('✅ Token uppdaterad', '#4ade80');
                     saveToCloud();
                     return;
                 }
             } else {
                 GITHUB_TOKEN = '';
                 localStorage.removeItem(TOKEN_KEY);
-                updateStatus('ðŸ—‘ï¸ Token raderad frÃ¥n denna enhet', '#facc15');
+                updateStatus('🗑️ Token raderad från denna enhet', '#facc15');
             }
         }
 
@@ -271,7 +277,7 @@
         let currentMatchId = null;
         let isSaving = false;
         let dirty = false;
-        // Tid fÃ¶r senaste LYKADE sparning - cloud-data som inte Ã¤r nyare Ã¤n detta ignoreras
+        // Tid för senaste LYKADE sparning - cloud-data som inte är nyare än detta ignoreras
         let lastSavedTime = 0;
 
         const FORMATION_PRESETS = {
@@ -311,44 +317,44 @@
 
         async function loadFromCloud() {
             try {
-                // Cache-busting: unik URL varje gÃ¥ng sÃ¥ CDN:n inte serverar gammal data
+                // Cache-busting: unik URL varje gång så CDN:n inte serverar gammal data
                 const url = RAW_URL + '?_=' + Date.now();
                 const res = await fetch(url);
                 if (res.ok) {
                     const data = await res.json();
                     if(data && data.teams) {
-                        // Lokala osparade Ã¤ndringar pÃ¥gÃ¥r - skriv INTE Ã¶ver UI:t
+                        // Lokala osparade ändringar pågår - skriv INTE över UI:t
                         if (dirty) {
-                            updateStatus('â˜ï¸ Sparar lokala Ã¤ndringar...', '#facc15');
+                            updateStatus('☁️ Sparar lokala ändringar...', '#facc15');
                             return;
                         }
 
-                        // SÃ¤kra regeln: applicera molndata ENDAST om den Ã¤r nyare Ã¤n
-                        // vÃ¥r senaste lyckade sparning. En match man precis skapat
-                        // kan dÃ¤rmed aldrig raderas av fÃ¶rdrÃ¶jd molndata.
+                        // Säkra regeln: applicera molndata ENDAST om den är nyare än
+                        // vår senaste lyckade sparning. En match man precis skapat
+                        // kan därmed aldrig raderas av fördröjd molndata.
                         const cloudTime = data.__updatedAt ? new Date(data.__updatedAt).getTime() : 0;
                         if (cloudTime > lastSavedTime) {
                             appData = data;
                             if (data.__updatedAt) lastSavedTime = cloudTime;
-                            else lastSavedTime = Date.now(); // gammal data utan stÃ¤mpel laddas EN gÃ¥ng
+                            else lastSavedTime = Date.now(); // gammal data utan stämpel laddas EN gång
                             refreshUI();
-                            updateStatus('â˜ï¸ Synkat med GitHub', '#4ade80');
+                            updateStatus('☁️ Synkat med GitHub', '#4ade80');
                             if (data.__updatedAt) showLastSaved(new Date(data.__updatedAt));
                         } else {
-                            // Molnet var inte nyare - visa VÃ…R senaste sparning, inte den Ã¥ldriga
-                            updateStatus('â˜ï¸ Synkat med GitHub', '#4ade80');
+                            // Molnet var inte nyare - visa VÅR senaste sparning, inte den åldriga
+                            updateStatus('☁️ Synkat med GitHub', '#4ade80');
                             if (lastSavedTime > 0) showLastSaved(new Date(lastSavedTime));
                         }
                     }
                 } else {
-                    updateStatus('âš ï¸ Ingen data.json hittades - Ã¤ndra nÃ¥got fÃ¶r att skapa den', '#facc15');
+                    updateStatus('⚠️ Ingen data.json hittades - ändra något för att skapa den', '#facc15');
                 }
             } catch(e) {
-                updateStatus('âš ï¸ Offline', '#f87171');
+                updateStatus('⚠️ Offline', '#f87171');
             }
         }
 
-        // SPARA data.json till GitHub. KrÃ¤ver token. Skapar filen om den inte finns.
+        // SPARA data.json till GitHub. Kräver token. Skapar filen om den inte finns.
         async function saveToCloud() {
             if (isSaving) return;
             isSaving = true;
@@ -356,9 +362,9 @@
             updateStatus('Sparar till GitHub...', '#facc15');
 
             try {
-                // Spara krÃ¤ver token - be om den om den inte finns i webblÃ¤saren
+                // Spara kräver token - be om den om den inte finns i webbläsaren
                 if (!ensureToken()) {
-                    updateStatus('âš ï¸ Ingen token - Ã¤ndringar ej sparade', '#f87171');
+                    updateStatus('⚠️ Ingen token - ändringar ej sparade', '#f87171');
                     dirty = false;
                     isSaving = false;
                     return;
@@ -369,12 +375,12 @@
                     'X-GitHub-Api-Version': '2022-11-28'
                 };
 
-                // 1) HÃ¤mta nuvarande sha pÃ¥ filen (behÃ¶vs fÃ¶r att uppdatera, inte fÃ¶r att skapa)
+                // 1) Hämta nuvarande sha på filen (behövs för att uppdatera, inte för att skapa)
                 let sha = null;
                 try {
                     const metaRes = await fetch(API_URL, { headers: headers });
                     if (metaRes.status === 401 || metaRes.status === 403) {
-                        updateStatus('âŒ Token avvisad/gÃ¥tt ut - byt via lÃ¤nken ovan', '#f87171');
+                        updateStatus('❌ Token avvisad/gått ut - byt via länken ovan', '#f87171');
                         isSaving = false;
                         return;
                     }
@@ -382,7 +388,7 @@
                         const meta = await metaRes.json();
                         sha = meta.sha;
                     }
-                } catch(e) { /* filen finns inte Ã¤nnu - vi skapar den */ }
+                } catch(e) { /* filen finns inte ännu - vi skapar den */ }
 
                 // 2) Skapa eller uppdatera filen
                 const saveData = JSON.parse(JSON.stringify(appData));
@@ -405,18 +411,18 @@
                     lastSavedTime = updated.getTime();
                     dirty = false;
                     showLastSaved(updated);
-                    updateStatus('â˜ï¸ Sparat i GitHub', '#4ade80');
+                    updateStatus('☁️ Sparat i GitHub', '#4ade80');
                 } else {
                     const err = await res.json();
                     if (err.message && err.message.includes('must match')) {
-                        updateStatus('âš ï¸ NÃ¥gon annan sparade samtidigt - provar igen', '#facc15');
+                        updateStatus('⚠️ Någon annan sparade samtidigt - provar igen', '#facc15');
                         setTimeout(saveToCloud, 2000);
                     } else {
-                        updateStatus('âŒ Kunde inte spara: ' + (err.message || res.status), '#f87171');
+                        updateStatus('❌ Kunde inte spara: ' + (err.message || res.status), '#f87171');
                     }
                 }
             } catch(e) {
-                updateStatus('âŒ Kunde inte spara', '#f87171');
+                updateStatus('❌ Kunde inte spara', '#f87171');
             }
             isSaving = false;
         }
@@ -465,7 +471,7 @@
         }
 
         function deleteTeam() {
-            if (confirm('Radera laget och alla tillhÃ¶rande matcher?')) {
+            if (confirm('Radera laget och alla tillhörande matcher?')) {
                 appData.teams = appData.teams.filter(t => t.id !== currentTeamId);
                 appData.matches = appData.matches.filter(m => m.teamId !== currentTeamId);
                 currentTeamId = null;
@@ -482,19 +488,19 @@
             const matchTeamSelect = document.getElementById('match-team-select');
             if(!teamSelect || !matchTeamSelect) return;
 
-            // Bevara nuvarande val mitt i anvÃ¤ndning (skrivs inte Ã¶ver av pollning)
+            // Bevara nuvarande val mitt i användning (skrivs inte över av pollning)
             const prevTeamValue = teamSelect.value;
             const prevMatchValue = matchTeamSelect.value;
 
-            teamSelect.innerHTML = '<option value="">-- VÃ¤lj Lag --</option>';
-            matchTeamSelect.innerHTML = '<option value="">-- VÃ¤lj Lag --</option>';
+            teamSelect.innerHTML = '<option value="">-- Välj Lag --</option>';
+            matchTeamSelect.innerHTML = '<option value="">-- Välj Lag --</option>';
 
             appData.teams.forEach(team => {
                 teamSelect.innerHTML += `<option value="${team.id}">${team.name}</option>`;
                 matchTeamSelect.innerHTML += `<option value="${team.id}">${team.name}</option>`;
             });
             if (currentTeamId) teamSelect.value = currentTeamId;
-            // Ã…terstÃ¤ll tidigare val om det fortfarande finns
+            // Återställ tidigare val om det fortfarande finns
             if (prevMatchValue && matchTeamSelect.querySelector(`option[value="${prevMatchValue}"]`)) {
                 matchTeamSelect.value = prevMatchValue;
             }
@@ -562,7 +568,7 @@
             team.players = team.players.filter(p => p.id !== playerId);
             saveToCloud();
             renderPlayers();
-            // Ta Ã¤ven bort spelarens plats i matcherna
+            // Ta även bort spelarens plats i matcherna
             appData.matches.forEach(m => {
                 if (m.teamId === currentTeamId) {
                     m.squad = m.squad.filter(pid => pid !== playerId);
@@ -582,7 +588,7 @@
             const opponent = matchOpponent ? matchOpponent.value.trim() : '';
             const type = matchType ? matchType.value : '7';
 
-            if (!teamId || !opponent) return alert('VÃ¤lj lag och ange motstÃ¥ndare!');
+            if (!teamId || !opponent) return alert('Välj lag och ange motståndare!');
 
             const newMatch = {
                 id: 'match_' + Date.now(),
@@ -600,11 +606,11 @@
             renderMatchList();
             loadMatch(newMatch.id);
 
-            // TÃ¶m fÃ¤lten sÃ¥ nÃ¤sta match kan skapas utan att radera gamla vÃ¤rden
+            // Töm fälten så nästa match kan skapas utan att radera gamla värden
             if (matchTeamSelect) matchTeamSelect.value = '';
             if (matchOpponent) matchOpponent.value = '';
             if (matchType) matchType.value = '7';
-            updateStatus('âœ… Match skapad!', '#4ade80');
+            updateStatus('✅ Match skapad!', '#4ade80');
         }
 
         function renderMatchList() {

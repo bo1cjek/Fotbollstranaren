@@ -310,9 +310,10 @@
           "onBench": true
         },
         "p_1789562165883": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 22,
+          "y": 30,
+          "onBench": false,
+          "role": "Vänsterback"
         },
         "p_1789562191276": {
           "x": 0,
@@ -437,6 +438,6 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:40:45.763Z",
-  "__version": 141
+  "__updatedAt": "2026-09-16T12:40:53.083Z",
+  "__version": 142
 }

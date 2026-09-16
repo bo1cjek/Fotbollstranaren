@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>Fotbollstränaren v7.18</title>
+    <title>Fotbollstränaren v7.19</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -80,7 +80,7 @@
         #last-saved { font-size: 0.75rem; color: #c7d2fe; text-align: center; padding: 6px 8px; background: var(--ifk-blue-dark); border-top: 1px solid var(--ifk-blue); }
 
         #main-area { flex: 1; display: flex; flex-direction: column; background: linear-gradient(180deg, #172554 0%, #0f172a 100%); position: relative; overflow: hidden; }
-        #match-header { background: linear-gradient(135deg, var(--ifk-blue) 0%, var(--ifk-blue-dark) 100%); color: #ffffff; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        #match-header { background: linear-gradient(135deg, var(--ifk-blue) 0%, var(--ifk-blue-dark) 100%); color: #ffffff; padding: 10px 14px; display: flex; justify-content: flex-start; gap: 10px; align-items: center; border-bottom: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
         #match-header .match-info-box { display: flex; flex-direction: column; }
         #match-header .match-brand { display: flex; align-items: center; gap: 10px; }
         #club-logo-small { height: 46px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); background: #fff; border-radius: 8px; padding: 2px; }
@@ -452,7 +452,7 @@
                 if (lastSavedTime > 0) showLastSaved(new Date(lastSavedTime));
             } catch(e) { /* localStorage otillgängligt - starta från noll */ }
             loadFromCloud();
-            setInterval(syncInterval, 5000);
+            setInterval(syncInterval, 3000);
         };
 
         function persistSyncState() {

@@ -180,8 +180,17 @@
       "formation": "custom",
       "squad": [],
       "positions": {}
+    },
+    {
+      "id": "match_1789562045168",
+      "teamId": "team_1789462599734",
+      "opponent": "ÖSK 2 Vit - 20/9",
+      "type": "9",
+      "formation": "custom",
+      "squad": [],
+      "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:33:49.329Z",
-  "__version": 94
+  "__updatedAt": "2026-09-16T12:34:05.176Z",
+  "__version": 95
 }

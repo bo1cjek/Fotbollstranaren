@@ -430,10 +430,10 @@
       ],
       "positions": {
         "p_1789539805277": {
-          "x": 20,
+          "x": 45,
           "y": 75,
           "onBench": false,
-          "role": "Vänsterback"
+          "role": "Vänster mitt"
         }
       }
     },
@@ -455,6 +455,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T07:50:15.090Z",
-  "__version": 9
+  "__updatedAt": "2026-09-16T07:50:17.451Z",
+  "__version": 10
 }

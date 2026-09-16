@@ -180,8 +180,17 @@
       "formation": "custom",
       "squad": [],
       "positions": {}
+    },
+    {
+      "id": "match_1789561958230",
+      "teamId": "team_1789539800079",
+      "opponent": "ÖSK Svart 1 - 19/9",
+      "type": "7",
+      "formation": "custom",
+      "squad": [],
+      "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:32:01.380Z",
-  "__version": 86
+  "__updatedAt": "2026-09-16T12:32:38.234Z",
+  "__version": 87
 }

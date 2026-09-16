@@ -274,50 +274,58 @@
       ],
       "positions": {
         "p_1789464831077": {
-          "x": 45,
-          "y": 15,
-          "onBench": false
+          "x": 8,
+          "y": 50,
+          "onBench": false,
+          "role": "Målvakt"
         },
         "p_1789464842402": {
+          "x": 20,
+          "y": 25,
+          "onBench": false,
+          "role": "Högerback"
+        },
+        "p_1789464853085": {
+          "x": 20,
+          "y": 50,
+          "onBench": false,
+          "role": "Mittback"
+        },
+        "p_1789464864337": {
+          "x": 20,
+          "y": 75,
+          "onBench": false,
+          "role": "Vänsterback"
+        },
+        "p_1789464884233": {
           "x": 45,
           "y": 15,
           "onBench": false,
           "role": "Höger mitt"
         },
-        "p_1789464853085": {
-          "x": 45,
-          "y": 62,
-          "onBench": false
-        },
-        "p_1789464864337": {
-          "x": 45,
-          "y": 85,
-          "onBench": false
-        },
-        "p_1789464884233": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
-        },
         "p_1789464892849": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 45,
+          "y": 38,
+          "onBench": false,
+          "role": "Mittfältare vänster"
         },
         "p_1789464904202": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 45,
+          "y": 62,
+          "onBench": false,
+          "role": "Mittfältare höger"
         },
         "p_1789464911636": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 45,
+          "y": 85,
+          "onBench": false,
+          "role": "Vänster mitt"
         },
         "p_1789464919117": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 78,
+          "y": 50,
+          "onBench": false,
+          "role": "Anfallare"
         },
         "p_1789464927001": {
           "x": 0,
@@ -390,10 +398,9 @@
           "onBench": true
         },
         "p_1789462620592": {
-          "x": 8,
-          "y": 50,
-          "onBench": false,
-          "role": "Målvakt"
+          "x": 0,
+          "y": 0,
+          "onBench": true
         },
         "p_1789464800657": {
           "x": 0,
@@ -413,5 +420,5 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T07:07:26.300Z"
+  "__updatedAt": "2026-09-16T07:07:32.024Z"
 }

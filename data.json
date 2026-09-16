@@ -451,8 +451,8 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T13:23:16.158Z",
-  "__version": 159,
+  "__updatedAt": "2026-09-16T13:23:31.031Z",
+  "__version": 160,
   "exercises": [
     {
       "id": "ex_1789564983172",
@@ -521,5 +521,15 @@
       ]
     }
   ],
-  "trainings": []
+  "trainings": [
+    {
+      "id": "tr_1789565011027",
+      "name": "Vecka 1 Pass 1",
+      "notes": "Passningar",
+      "exerciseIds": [
+        "ex_1789564983172",
+        "ex_1789564996154"
+      ]
+    }
+  ]
 }

@@ -448,14 +448,14 @@
       ],
       "positions": {
         "p_1789539805277": {
-          "x": 48,
-          "y": 20,
+          "x": 78,
+          "y": 50,
           "onBench": false,
-          "role": "Vänster mitt"
+          "role": "Anfallare"
         }
       }
     }
   ],
-  "__updatedAt": "2026-09-16T08:04:35.973Z",
-  "__version": 22
+  "__updatedAt": "2026-09-16T08:04:38.208Z",
+  "__version": 23
 }

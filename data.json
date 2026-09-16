@@ -424,14 +424,14 @@
       "teamId": "team_1789539800079",
       "opponent": "lkölöklkölökölk",
       "type": "7",
-      "formation": "3-3-2",
+      "formation": "3-4-1",
       "squad": [
         "p_1789539805277"
       ],
       "positions": {
         "p_1789539805277": {
           "x": 45,
-          "y": 25,
+          "y": 15,
           "onBench": false,
           "role": "Höger mitt"
         }
@@ -455,6 +455,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T07:50:51.514Z",
-  "__version": 12
+  "__updatedAt": "2026-09-16T07:51:06.350Z",
+  "__version": 13
 }

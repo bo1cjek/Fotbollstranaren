@@ -424,7 +424,7 @@
       "teamId": "team_1789462599734",
       "opponent": "Ektorp",
       "type": "9",
-      "formation": "custom",
+      "formation": "3-4-1",
       "squad": [
         "p_1789462620592",
         "p_1789464800657",
@@ -456,49 +456,58 @@
       ],
       "positions": {
         "p_1789462620592": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 8,
+          "y": 50,
+          "onBench": false,
+          "role": "Målvakt"
         },
         "p_1789464800657": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 20,
+          "y": 75,
+          "onBench": false,
+          "role": "Högerback"
         },
         "p_1789464809920": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 20,
+          "y": 50,
+          "onBench": false,
+          "role": "Mittback"
         },
         "p_1789464819699": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 20,
+          "y": 25,
+          "onBench": false,
+          "role": "Vänsterback"
         },
         "p_1789464831077": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 45,
+          "y": 85,
+          "onBench": false,
+          "role": "Höger mitt"
         },
         "p_1789464842402": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 45,
+          "y": 38,
+          "onBench": false,
+          "role": "Mittfältare vänster"
         },
         "p_1789464853085": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 45,
+          "y": 62,
+          "onBench": false,
+          "role": "Mittfältare höger"
         },
         "p_1789464864337": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 45,
+          "y": 15,
+          "onBench": false,
+          "role": "Vänster mitt"
         },
         "p_1789464884233": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 78,
+          "y": 50,
+          "onBench": false,
+          "role": "Anfallare"
         },
         "p_1789464892849": {
           "x": 0,
@@ -593,6 +602,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T08:35:26.219Z",
-  "__version": 43
+  "__updatedAt": "2026-09-16T08:35:51.922Z",
+  "__version": 44
 }

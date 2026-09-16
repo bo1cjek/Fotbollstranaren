@@ -436,26 +436,8 @@
           "role": "Vänster mitt"
         }
       }
-    },
-    {
-      "id": "match_1789544946113",
-      "teamId": "team_1789539800079",
-      "opponent": "Jkkk",
-      "type": "7",
-      "formation": "3-4-1",
-      "squad": [
-        "p_1789539805277"
-      ],
-      "positions": {
-        "p_1789539805277": {
-          "x": 45,
-          "y": 85,
-          "onBench": false,
-          "role": "Höger mitt"
-        }
-      }
     }
   ],
-  "__updatedAt": "2026-09-16T08:13:28.509Z",
-  "__version": 35
+  "__updatedAt": "2026-09-16T08:14:50.966Z",
+  "__version": 36
 }

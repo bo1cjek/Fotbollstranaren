@@ -155,15 +155,6 @@
   ],
   "matches": [
     {
-      "id": "match_1789561614238",
-      "teamId": "team_1789462599734",
-      "opponent": "Örebro SK FK 2 Vit",
-      "type": "9",
-      "formation": "custom",
-      "squad": [],
-      "positions": {}
-    },
-    {
       "id": "match_1789561958230",
       "teamId": "team_1789539800079",
       "opponent": "ÖSK Svart 1 - 19/9",
@@ -191,6 +182,6 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:33:20.509Z",
-  "__version": 91
+  "__updatedAt": "2026-09-16T12:33:23.685Z",
+  "__version": 92
 }

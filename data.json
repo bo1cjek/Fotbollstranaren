@@ -451,8 +451,8 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T13:04:39.723Z",
-  "__version": 152,
+  "__updatedAt": "2026-09-16T13:07:10.910Z",
+  "__version": 153,
   "exercises": [
     {
       "id": "ex_1789563856170",
@@ -474,6 +474,30 @@
           "type": "cone",
           "x": 76.2,
           "y": 50.9
+        },
+        {
+          "type": "player",
+          "x": 13,
+          "y": 51.2,
+          "label": "A"
+        },
+        {
+          "type": "player",
+          "x": 24.3,
+          "y": 60.2,
+          "label": "B"
+        },
+        {
+          "type": "player",
+          "x": 33.2,
+          "y": 72,
+          "label": "C"
+        },
+        {
+          "type": "player",
+          "x": 47.2,
+          "y": 76.2,
+          "label": "D"
         },
         {
           "type": "arrow",

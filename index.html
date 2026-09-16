@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>Fotbollstränaren v7.19</title>
+    <title>Fotbollstränaren v7.20</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -907,7 +907,8 @@
             list.innerHTML = '';
             if (!team) return;
 
-            team.players.forEach(p => {
+            const players = sortedPlayers(team.players);
+            players.forEach(p => {
                 list.innerHTML += `
                     <div class="list-item">
                         <span>${p.number ? '#' + p.number + ' ' : ''}${p.name}</span>
@@ -951,10 +952,8 @@
                 formation: 'custom', squad: [], positions: {}
             };
 
-            const team = appData.teams.find(t => t.id === teamId);
-            if(team) {
-                newMatch.squad = team.players.map(p => p.id);
-            }
+            // Inga spelare förvalda - tränaren klickar själv i vilka som ska med.
+            // (Annars blev hela laget automatiskt uttagna vid matchskapen.)
 
             appData.matches.push(newMatch);
             saveToCloud();
@@ -1014,13 +1013,32 @@
             renderBoard();
         }
 
+        // Sorterar spelare: nummrerad först i nummerordning, sedan övriga i bokstavsordning
+        function sortedPlayers(players) {
+            return players.slice().sort((a, b) => {
+                const na = parseInt(a.number, 10);
+                const nb = parseInt(b.number, 10);
+                const hasA = a.number !== '' && !isNaN(na);
+                const hasB = b.number !== '' && !isNaN(nb);
+                if (hasA && hasB) {
+                    if (na !== nb) return na - nb;
+                    return a.name.localeCompare(b.name, 'sv');
+                }
+                if (hasA) return -1;
+                if (hasB) return 1;
+                return a.name.localeCompare(b.name, 'sv');
+            });
+        }
+
         function renderSquadChecklist(team, match) {
             const container = document.getElementById('match-squad-checklist');
             if(!container) return;
             container.innerHTML = '';
             if (!team) return;
 
-            team.players.forEach(p => {
+            // Sortera: spelare med tröjnummer i nummerordning, sedan de utan nummer i bokstavsordning
+            const sorted = sortedPlayers(team.players);
+            sorted.forEach(p => {
                 const inSquad = match.squad.includes(p.id);
                 const pos = match.positions[p.id];
                 const role = pos && pos.role;

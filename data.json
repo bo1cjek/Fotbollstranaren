@@ -294,9 +294,10 @@
       ],
       "positions": {
         "p_1789562158503": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 48,
+          "y": 50,
+          "onBench": false,
+          "role": "Mittfältare"
         },
         "p_1789562218977": {
           "x": 22,
@@ -438,6 +439,6 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:40:55.626Z",
-  "__version": 143
+  "__updatedAt": "2026-09-16T12:40:59.421Z",
+  "__version": 144
 }

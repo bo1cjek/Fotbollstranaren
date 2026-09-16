@@ -245,7 +245,7 @@
                 <h2>Formation & Taktik</h2>
                 <div class="form-group">
                     <label for="formation-select">Formation:</label>
-                    <select id="formation-select" onchange="applyFormation()">
+                    <select id="formation-select" onchange="changeFormation()">
                         <option value="custom">-- Egen Formation --</option>
                         <optgroup label="7-manna">
                             <option value="2-3-1">2-3-1</option>
@@ -324,7 +324,7 @@
         // Be tränaren att ange token om den inte finns
         function ensureToken() {
             if (GITHUB_TOKEN) return GITHUB_TOKEN;
-            const t = prompt('Ange GitHub-token för att kunna spara:');
+            const t = prompt('Ange GitHub-token för att kunna spara (ges av huvudtränaren):');
             if (t && t.trim()) {
                 GITHUB_TOKEN = t.trim();
                 localStorage.setItem(TOKEN_KEY, GITHUB_TOKEN);
@@ -1100,43 +1100,27 @@ async function fetchCloudData() {
             renderBoard();
         }
 
-        function applyFormation() {
+        function changeFormation() {
             const match = appData.matches.find(m => m.id === currentMatchId);
             if (!match) return;
 
             const formEl = document.getElementById('formation-select');
-            const selected = formEl ? formEl.value : 'custom';
-            match.formation = selected;
+            match.formation = formEl ? formEl.value : 'custom';
 
-            const slots = POSITION_LAYOUTS[selected];
+            const slots = POSITION_LAYOUTS[match.formation];
             if (slots) {
-                const assigned = new Set();
-
-                // 1) Behåll spelare som redan fått en position som finns i denna formation
+                // Spara bara formationen - placera INTE om hela laget.
+                // Spelare med roller som inte finns i nya formationen hamnar på bänken,
+                // resten behåller sin nuvarande placering tills knappen trycks.
                 match.squad.forEach(playerId => {
                     const role = match.positions[playerId] && match.positions[playerId].role;
-                    const slot = role ? slots.find(s => s.name === role) : null;
-                    if (slot && !assigned.has(slot.id)) {
-                        match.positions[playerId] = { x: slot.x, y: slot.y, onBench: false, role: slot.name };
-                        assigned.add(slot.id);
-                    }
-                });
-
-                // 2) Fyll tomma platser med resterande spelare i ordningen de står
-                let slotIdx = 0;
-                match.squad.forEach(playerId => {
-                    const pos = match.positions[playerId];
-                    if (pos && !pos.onBench) return;
-
-                    while (slotIdx < slots.length && assigned.has(slots[slotIdx].id)) slotIdx++;
-
-                    if (slotIdx < slots.length) {
-                        const slot = slots[slotIdx];
-                        match.positions[playerId] = { x: slot.x, y: slot.y, onBench: false, role: slot.name };
-                        assigned.add(slot.id);
-                        slotIdx++;
-                    } else {
-                        match.positions[playerId] = { x: 0, y: 0, onBench: true };
+                    if (role) {
+                        const slot = slots.find(s => s.name === role);
+                        if (slot) {
+                            match.positions[playerId] = { x: slot.x, y: slot.y, onBench: false, role: slot.name };
+                        } else {
+                            match.positions[playerId] = { x: 0, y: 0, onBench: true };
+                        }
                     }
                 });
             }
@@ -1144,7 +1128,7 @@ async function fetchCloudData() {
             renderBoard();
         }
 
-        function autoPlaceAll() {
+function autoPlaceAll() {
             const match = appData.matches.find(m => m.id === currentMatchId);
             if (!match) return;
 

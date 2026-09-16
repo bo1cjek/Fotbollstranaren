@@ -424,15 +424,16 @@
       "teamId": "team_1789539800079",
       "opponent": "lkölöklkölökölk",
       "type": "7",
-      "formation": "custom",
+      "formation": "3-2-1",
       "squad": [
         "p_1789539805277"
       ],
       "positions": {
         "p_1789539805277": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 8,
+          "y": 50,
+          "onBench": false,
+          "role": "Målvakt"
         }
       }
     },
@@ -454,6 +455,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T07:49:06.125Z",
-  "__version": 4
+  "__updatedAt": "2026-09-16T07:50:03.989Z",
+  "__version": 5
 }

@@ -340,7 +340,7 @@
       "teamId": "team_1789462599734",
       "opponent": "test",
       "type": "7",
-      "formation": "3-4-1",
+      "formation": "3-2-1",
       "squad": [
         "p_1789462620592",
         "p_1789464800657",
@@ -360,26 +360,26 @@
           "role": "Målvakt"
         },
         "p_1789464800657": {
-          "x": 20,
+          "x": 22,
           "y": 75,
           "onBench": false,
           "role": "Högerback"
         },
         "p_1789464809920": {
-          "x": 20,
+          "x": 22,
           "y": 50,
           "onBench": false,
           "role": "Mittback"
         },
         "p_1789464853085": {
-          "x": 20,
+          "x": 22,
           "y": 25,
           "onBench": false,
           "role": "Vänsterback"
         },
         "p_1789464831077": {
-          "x": 45,
-          "y": 85,
+          "x": 48,
+          "y": 65,
           "onBench": false,
           "role": "Höger mitt"
         },
@@ -396,8 +396,8 @@
           "role": "Mittfältare höger"
         },
         "p_1789464884233": {
-          "x": 45,
-          "y": 15,
+          "x": 48,
+          "y": 35,
           "onBench": false,
           "role": "Vänster mitt"
         },
@@ -410,6 +410,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T12:16:51.116Z",
-  "__version": 78
+  "__updatedAt": "2026-09-16T12:24:15.694Z",
+  "__version": 79
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Fotbollstränaren v7.5</title>
+    <title>Fotbollstränaren v7..5</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -247,6 +247,7 @@
         let currentTeamId = null;
         let currentMatchId = null;
         let isSaving = false;
+        let dirty = false;
 
         const FORMATION_PRESETS = {
             "2-3-1": [ {x: 8, y: 50}, {x: 22, y: 30}, {x: 22, y: 70}, {x: 48, y: 20}, {x: 48, y: 50}, {x: 48, y: 80}, {x: 78, y: 50} ],
@@ -289,10 +290,23 @@
                 if (res.ok) {
                     const data = await res.json();
                     if(data && data.teams) {
-                        appData = data;
-                        refreshUI();
-                        updateStatus('☁️ Synkat med GitHub', '#4ade80');
-                        if (data.__updatedAt) showLastSaved(new Date(data.__updatedAt));
+                        // Undvik att skriva över lokala, osparade ändringar.
+                        // Jämför tidsstämpeln: molnet får bara skriva över om det är nyare data.
+                        const cloudTime = data.__updatedAt ? new Date(data.__updatedAt).getTime() : 0;
+                        const localTime = appData.__updatedAt ? new Date(appData.__updatedAt).getTime() : 0;
+
+                        if (dirty) {
+                            // Lokala ändringar pågår - skriv inte över användarens UI!
+                            updateStatus('☁️ Sparar lokala ändringar...', '#facc15');
+                        } else if (cloudTime >= localTime) {
+                            appData = data;
+                            refreshUI();
+                            updateStatus('☁️ Synkat med GitHub', '#4ade80');
+                            if (data.__updatedAt) showLastSaved(new Date(data.__updatedAt));
+                        } else {
+                            // Molnet är äldre - behåll lokalt (detta skrivs snart upp)
+                            updateStatus('☁️ Molnet var äldre - behåller lokalt', '#4ade80');
+                        }
                     }
                 } else {
                     updateStatus('⚠️ Ingen data.json hittades - ändra något för att skapa den', '#facc15');
@@ -306,12 +320,14 @@
         async function saveToCloud() {
             if (isSaving) return;
             isSaving = true;
+            dirty = true;
             updateStatus('Sparar till GitHub...', '#facc15');
 
             try {
                 // Spara kräver token - be om den om den inte finns i webbläsaren
                 if (!ensureToken()) {
-                    updateStatus('⚠️ Ingen token - kan inte spara', '#f87171');
+                    updateStatus('⚠️ Ingen token - ändringar ej sparade', '#f87171');
+                    dirty = false;
                     isSaving = false;
                     return;
                 }
@@ -354,6 +370,7 @@
                 if (res.ok) {
                     const updated = new Date(saveData.__updatedAt);
                     appData.__updatedAt = saveData.__updatedAt;
+                    dirty = false;
                     showLastSaved(updated);
                     updateStatus('☁️ Sparat i GitHub', '#4ade80');
                 } else {
@@ -432,6 +449,10 @@
             const matchTeamSelect = document.getElementById('match-team-select');
             if(!teamSelect || !matchTeamSelect) return;
 
+            // Bevara nuvarande val mitt i användning (skrivs inte över av pollning)
+            const prevTeamValue = teamSelect.value;
+            const prevMatchValue = matchTeamSelect.value;
+
             teamSelect.innerHTML = '<option value="">-- Välj Lag --</option>';
             matchTeamSelect.innerHTML = '<option value="">-- Välj Lag --</option>';
 
@@ -440,6 +461,13 @@
                 matchTeamSelect.innerHTML += `<option value="${team.id}">${team.name}</option>`;
             });
             if (currentTeamId) teamSelect.value = currentTeamId;
+            // Återställ tidigare val om det fortfarande finns
+            if (prevMatchValue && matchTeamSelect.querySelector(`option[value="${prevMatchValue}"]`)) {
+                matchTeamSelect.value = prevMatchValue;
+            }
+            if (prevTeamValue && teamSelect.querySelector(`option[value="${prevTeamValue}"]`)) {
+                teamSelect.value = prevTeamValue;
+            }
         }
 
         function selectTeam(idToSelect = null) {

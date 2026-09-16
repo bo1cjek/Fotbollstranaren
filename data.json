@@ -434,9 +434,10 @@
       ],
       "positions": {
         "p_1789464809920": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 20,
+          "y": 50,
+          "onBench": false,
+          "role": "Mittback"
         }
       }
     },
@@ -450,6 +451,6 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:53:07.691Z",
-  "__version": 149
+  "__updatedAt": "2026-09-16T12:53:10.253Z",
+  "__version": 150
 }

@@ -443,19 +443,10 @@
       "opponent": "Jkkk",
       "type": "7",
       "formation": "3-4-1",
-      "squad": [
-        "p_1789539805277"
-      ],
-      "positions": {
-        "p_1789539805277": {
-          "x": 20,
-          "y": 25,
-          "onBench": false,
-          "role": "Vänsterback"
-        }
-      }
+      "squad": [],
+      "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T08:04:52.159Z",
-  "__version": 30
+  "__updatedAt": "2026-09-16T08:04:55.517Z",
+  "__version": 31
 }

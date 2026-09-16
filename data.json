@@ -319,9 +319,10 @@
           "onBench": true
         },
         "p_1789562136973": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 8,
+          "y": 50,
+          "onBench": false,
+          "role": "Målvakt"
         },
         "p_1789562182846": {
           "x": 0,
@@ -435,6 +436,6 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:38:40.130Z",
-  "__version": 139
+  "__updatedAt": "2026-09-16T12:39:30.342Z",
+  "__version": 140
 }

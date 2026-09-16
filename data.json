@@ -341,10 +341,18 @@
       "opponent": "test",
       "type": "7",
       "formation": "custom",
-      "squad": [],
-      "positions": {}
+      "squad": [
+        "p_1789462620592"
+      ],
+      "positions": {
+        "p_1789462620592": {
+          "x": 0,
+          "y": 0,
+          "onBench": true
+        }
+      }
     }
   ],
-  "__updatedAt": "2026-09-16T12:05:25.441Z",
-  "__version": 71
+  "__updatedAt": "2026-09-16T12:05:55.240Z",
+  "__version": 72
 }

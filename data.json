@@ -153,7 +153,17 @@
       ]
     }
   ],
-  "matches": [],
-  "__updatedAt": "2026-09-16T12:24:46.360Z",
-  "__version": 83
+  "matches": [
+    {
+      "id": "match_1789561574288",
+      "teamId": "team_1789462599734",
+      "opponent": "Rävåsens IK",
+      "type": "9",
+      "formation": "custom",
+      "squad": [],
+      "positions": {}
+    }
+  ],
+  "__updatedAt": "2026-09-16T12:26:14.294Z",
+  "__version": 84
 }

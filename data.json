@@ -334,80 +334,8 @@
           "onBench": true
         }
       }
-    },
-    {
-      "id": "match_1789560325424",
-      "teamId": "team_1789462599734",
-      "opponent": "test",
-      "type": "7",
-      "formation": "3-2-1",
-      "squad": [
-        "p_1789462620592",
-        "p_1789464800657",
-        "p_1789464809920",
-        "p_1789464853085",
-        "p_1789464831077",
-        "p_1789464842402",
-        "p_1789464864337",
-        "p_1789464884233",
-        "p_1789464911636"
-      ],
-      "positions": {
-        "p_1789462620592": {
-          "x": 8,
-          "y": 50,
-          "onBench": false,
-          "role": "Målvakt"
-        },
-        "p_1789464800657": {
-          "x": 22,
-          "y": 75,
-          "onBench": false,
-          "role": "Högerback"
-        },
-        "p_1789464809920": {
-          "x": 22,
-          "y": 50,
-          "onBench": false,
-          "role": "Mittback"
-        },
-        "p_1789464853085": {
-          "x": 22,
-          "y": 25,
-          "onBench": false,
-          "role": "Vänsterback"
-        },
-        "p_1789464831077": {
-          "x": 48,
-          "y": 65,
-          "onBench": false,
-          "role": "Höger mitt"
-        },
-        "p_1789464842402": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
-        },
-        "p_1789464864337": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
-        },
-        "p_1789464884233": {
-          "x": 48,
-          "y": 35,
-          "onBench": false,
-          "role": "Vänster mitt"
-        },
-        "p_1789464911636": {
-          "x": 78,
-          "y": 50,
-          "onBench": false,
-          "role": "Anfallare"
-        }
-      }
     }
   ],
-  "__updatedAt": "2026-09-16T12:24:24.491Z",
-  "__version": 81
+  "__updatedAt": "2026-09-16T12:24:30.263Z",
+  "__version": 82
 }

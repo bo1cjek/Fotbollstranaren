@@ -442,19 +442,20 @@
       "teamId": "team_1789539800079",
       "opponent": "Jkkk",
       "type": "7",
-      "formation": "custom",
+      "formation": "2-3-1",
       "squad": [
         "p_1789539805277"
       ],
       "positions": {
         "p_1789539805277": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 8,
+          "y": 50,
+          "onBench": false,
+          "role": "Målvakt"
         }
       }
     }
   ],
-  "__updatedAt": "2026-09-16T07:51:45.020Z",
-  "__version": 16
+  "__updatedAt": "2026-09-16T08:04:24.999Z",
+  "__version": 17
 }

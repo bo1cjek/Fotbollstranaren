@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Fotbollstränaren v7.4</title>
+    <title>Fotbollstränaren v7.5</title>
     <style>
         :root {
             --pitch-green: #2e7d32;
@@ -84,6 +84,9 @@
             </div>
             <div id="sync-status">Ansluter till Google...</div>
             <div id="last-saved">Senast sparat: --</div>
+            <div style="text-align:center; background:#1e293b; padding-bottom:4px;">
+                <span style="font-size:0.7rem; color:#38bdf8; cursor:pointer; text-decoration:underline;" onclick="changeToken()">Byt/Anges GitHub-token</span>
+            </div>
 
             <div id="tab-teams" class="tab-content active">
                 <h2>Mina Lag</h2>
@@ -193,23 +196,52 @@
 
     <script>
         // ====== GITHUB KONFIGURATION ======
-        // Filen läses utan token (repo är publikt). För att SPARA krävs en token:
-        // GitHub.com -> Settings -> Developer settings -> Personal access tokens -> Fine-grained tokens
-        // Rättigheter: Endast detta repo, Contents: Read and write. Inget annat!
-        // VARNING: Token är synlig i källkoden - begränsa den så mycket som möjligt!
+        // Filen läses utan token (repo är publikt). För att SPARA krävs en token.
+        // Token SPARAS ALDRIG i denna fil - den läggs i webbläsarens minne (localStorage)
+        // av varje tränare en gång. Annars återkallar GitHub token automatiskt!
+        // Skapa token: Settings -> Developer settings -> Fine-grained tokens
+        // Rättigheter: Endast detta repo, Contents: Read and write.
         const GITHUB_OWNER  = 'bo1cjek';              // GitHub-användarnamn
         const GITHUB_REPO   = 'Fotbollstranaren';     // Repo-namn
         const GITHUB_BRANCH = 'main';                 // eller 'master' - kolla i ditt repo!
-        const GITHUB_TOKEN  = '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';     // <-- KLISTRA IN DIN TOKEN HÄR
         const DATA_FILE     = 'data.json';
+        const TOKEN_KEY = 'ft_github_token';
+
+        // Hämta token från webbläsarens minne
+        let GITHUB_TOKEN = localStorage.getItem(TOKEN_KEY) || '';
+
+        // Be tränaren att ange token om den inte finns
+        function ensureToken() {
+            if (GITHUB_TOKEN) return GITHUB_TOKEN;
+            const t = prompt('Ange GitHub-token för att kunna spara (ges av huvudtränaren):');
+            if (t && t.trim()) {
+                GITHUB_TOKEN = t.trim();
+                localStorage.setItem(TOKEN_KEY, GITHUB_TOKEN);
+            }
+            return GITHUB_TOKEN;
+        }
+
+        // Låt tränaren byta/ta bort token i webbläsarens minne
+        function changeToken() {
+            const action = confirm('Token finns sparad i denna webbläsare.\n\nOK = ange en ny token\nAvbryt = radera sparad token');
+            if (action) {
+                const t = prompt('Ange ny GitHub-token:');
+                if (t && t.trim()) {
+                    GITHUB_TOKEN = t.trim();
+                    localStorage.setItem(TOKEN_KEY, GITHUB_TOKEN);
+                    updateStatus('✅ Token uppdaterad', '#4ade80');
+                    saveToCloud();
+                    return;
+                }
+            } else {
+                GITHUB_TOKEN = '';
+                localStorage.removeItem(TOKEN_KEY);
+                updateStatus('🗑️ Token raderad från denna enhet', '#facc15');
+            }
+        }
 
         const RAW_URL  = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${DATA_FILE}`;
         const API_URL  = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DATA_FILE}`;
-        const HEADERS  = {
-            'Authorization': `Bearer ${GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28'
-        };
 
         let appData = { teams: [], matches: [] };
         let currentTeamId = null;
@@ -277,10 +309,27 @@
             updateStatus('Sparar till GitHub...', '#facc15');
 
             try {
+                // Spara kräver token - be om den om den inte finns i webbläsaren
+                if (!ensureToken()) {
+                    updateStatus('⚠️ Ingen token - kan inte spara', '#f87171');
+                    isSaving = false;
+                    return;
+                }
+                const headers = {
+                    'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                    'Accept': 'application/vnd.github+json',
+                    'X-GitHub-Api-Version': '2022-11-28'
+                };
+
                 // 1) Hämta nuvarande sha på filen (behövs för att uppdatera, inte för att skapa)
                 let sha = null;
                 try {
-                    const metaRes = await fetch(API_URL, { headers: HEADERS });
+                    const metaRes = await fetch(API_URL, { headers: headers });
+                    if (metaRes.status === 401 || metaRes.status === 403) {
+                        updateStatus('❌ Token avvisad/gått ut - byt via länken ovan', '#f87171');
+                        isSaving = false;
+                        return;
+                    }
                     if (metaRes.ok) {
                         const meta = await metaRes.json();
                         sha = meta.sha;
@@ -298,7 +347,7 @@
 
                 const res = await fetch(API_URL, {
                     method: 'PUT',
-                    headers: HEADERS,
+                    headers: headers,
                     body: JSON.stringify(body)
                 });
 

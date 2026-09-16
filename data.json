@@ -144,7 +144,13 @@
     {
       "id": "team_1789539800079",
       "name": "P015",
-      "players": []
+      "players": [
+        {
+          "id": "p_1789562128662",
+          "name": "Olle",
+          "number": ""
+        }
+      ]
     }
   ],
   "matches": [
@@ -185,6 +191,6 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:35:22.278Z",
-  "__version": 97
+  "__updatedAt": "2026-09-16T12:35:28.664Z",
+  "__version": 98
 }

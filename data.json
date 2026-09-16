@@ -474,10 +474,9 @@
           "role": "Mittback"
         },
         "p_1789464819699": {
-          "x": 20,
-          "y": 25,
-          "onBench": false,
-          "role": "Vänsterback"
+          "x": 0,
+          "y": 0,
+          "onBench": true
         },
         "p_1789464831077": {
           "x": 45,
@@ -602,6 +601,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T11:53:09.699Z",
-  "__version": 49
+  "__updatedAt": "2026-09-16T11:53:19.118Z",
+  "__version": 50
 }

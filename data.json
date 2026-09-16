@@ -451,8 +451,8 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T13:04:16.174Z",
-  "__version": 151,
+  "__updatedAt": "2026-09-16T13:04:39.723Z",
+  "__version": 152,
   "exercises": [
     {
       "id": "ex_1789563856170",
@@ -492,5 +492,14 @@
       ]
     }
   ],
-  "trainings": []
+  "trainings": [
+    {
+      "id": "tr_1789563879721",
+      "name": "veck1 pass 1",
+      "notes": "fokus på pass",
+      "exerciseIds": [
+        "ex_1789563856170"
+      ]
+    }
+  ]
 }

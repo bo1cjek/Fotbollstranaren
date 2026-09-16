@@ -420,9 +420,9 @@
       }
     },
     {
-      "id": "match_1789543073231",
+      "id": "match_1789543134320",
       "teamId": "team_1789462599734",
-      "opponent": "Jjj",
+      "opponent": "ioup0",
       "type": "7",
       "formation": "custom",
       "squad": [
@@ -593,5 +593,5 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T07:17:53.516Z"
+  "__updatedAt": "2026-09-16T07:18:54.644Z"
 }

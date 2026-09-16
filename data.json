@@ -454,25 +454,8 @@
           "role": "Höger mitt"
         }
       }
-    },
-    {
-      "id": "match_1789546271883",
-      "teamId": "team_1789539800079",
-      "opponent": "jklöäkljöjklkljkljo978987689756674",
-      "type": "7",
-      "formation": "custom",
-      "squad": [
-        "p_1789539805277"
-      ],
-      "positions": {
-        "p_1789539805277": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
-        }
-      }
     }
   ],
-  "__updatedAt": "2026-09-16T08:11:11.888Z",
-  "__version": 34
+  "__updatedAt": "2026-09-16T08:13:28.509Z",
+  "__version": 35
 }

@@ -431,9 +431,9 @@
       "positions": {
         "p_1789539805277": {
           "x": 20,
-          "y": 25,
+          "y": 75,
           "onBench": false,
-          "role": "Högerback"
+          "role": "Vänsterback"
         }
       }
     },
@@ -455,6 +455,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T07:50:12.861Z",
-  "__version": 8
+  "__updatedAt": "2026-09-16T07:50:15.090Z",
+  "__version": 9
 }

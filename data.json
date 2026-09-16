@@ -334,9 +334,10 @@
           "onBench": true
         },
         "p_1789562162531": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 48,
+          "y": 80,
+          "onBench": false,
+          "role": "Höger mitt"
         },
         "p_1789562150332": {
           "x": 0,
@@ -450,8 +451,8 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T14:38:55.093Z",
-  "__version": 165,
+  "__updatedAt": "2026-09-16T14:38:57.210Z",
+  "__version": 166,
   "exercises": [
     {
       "id": "ex_1789564983172",

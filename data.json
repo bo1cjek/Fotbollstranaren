@@ -451,8 +451,53 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T13:16:45.872Z",
-  "__version": 157,
-  "exercises": [],
+  "__updatedAt": "2026-09-16T13:23:03.178Z",
+  "__version": 158,
+  "exercises": [
+    {
+      "id": "ex_1789564983172",
+      "name": "Passa",
+      "duration": 10,
+      "info": "Passa bollen",
+      "items": [
+        {
+          "type": "cone",
+          "x": 22.3,
+          "y": 47.3
+        },
+        {
+          "type": "cone",
+          "x": 63.6,
+          "y": 47.6
+        },
+        {
+          "type": "player",
+          "x": 19.7,
+          "y": 43.7,
+          "label": "A"
+        },
+        {
+          "type": "player",
+          "x": 65.4,
+          "y": 43.5,
+          "label": "B"
+        },
+        {
+          "type": "arrow",
+          "x1": 26.1,
+          "y1": 42.6,
+          "x2": 53.6,
+          "y2": 43
+        },
+        {
+          "type": "arrow",
+          "x1": 53.3,
+          "y1": 53.2,
+          "x2": 27.3,
+          "y2": 49.5
+        }
+      ]
+    }
+  ],
   "trainings": []
 }

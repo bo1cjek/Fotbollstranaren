@@ -242,7 +242,7 @@
       "teamId": "team_1789462599734",
       "opponent": "Örebro SK FK 2 Vit",
       "type": "9",
-      "formation": "custom",
+      "formation": "3-4-1",
       "squad": [
         "p_1789462620592",
         "p_1789464800657",
@@ -274,49 +274,49 @@
       ],
       "positions": {
         "p_1789462620592": {
-          "x": 34.9,
-          "y": 70.625,
+          "x": 8,
+          "y": 50,
           "onBench": false
         },
         "p_1789464800657": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 20,
+          "y": 25,
+          "onBench": false
         },
         "p_1789464809920": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 20,
+          "y": 50,
+          "onBench": false
         },
         "p_1789464819699": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 20,
+          "y": 75,
+          "onBench": false
         },
         "p_1789464831077": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 45,
+          "y": 15,
+          "onBench": false
         },
         "p_1789464842402": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 45,
+          "y": 38,
+          "onBench": false
         },
         "p_1789464853085": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 45,
+          "y": 62,
+          "onBench": false
         },
         "p_1789464864337": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 45,
+          "y": 85,
+          "onBench": false
         },
         "p_1789464884233": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 78,
+          "y": 50,
+          "onBench": false
         },
         "p_1789464892849": {
           "x": 0,
@@ -411,5 +411,5 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T06:53:43.534Z"
+  "__updatedAt": "2026-09-16T06:53:52.598Z"
 }

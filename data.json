@@ -424,13 +424,13 @@
       "teamId": "team_1789539800079",
       "opponent": "lkölöklkölökölk",
       "type": "7",
-      "formation": "3-2-1",
+      "formation": "3-3-2",
       "squad": [
         "p_1789539805277"
       ],
       "positions": {
         "p_1789539805277": {
-          "x": 22,
+          "x": 20,
           "y": 25,
           "onBench": false,
           "role": "Högerback"
@@ -455,6 +455,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T07:50:09.305Z",
-  "__version": 7
+  "__updatedAt": "2026-09-16T07:50:12.861Z",
+  "__version": 8
 }

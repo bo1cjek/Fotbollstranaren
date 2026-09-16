@@ -351,8 +351,16 @@
       "opponent": "Laxå IF - 19/9",
       "type": "7",
       "formation": "custom",
-      "squad": [],
-      "positions": {}
+      "squad": [
+        "p_1789562146968"
+      ],
+      "positions": {
+        "p_1789562146968": {
+          "x": 0,
+          "y": 0,
+          "onBench": true
+        }
+      }
     },
     {
       "id": "match_1789562029321",
@@ -373,6 +381,6 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:37:51.124Z",
-  "__version": 130
+  "__updatedAt": "2026-09-16T12:38:05.411Z",
+  "__version": 131
 }

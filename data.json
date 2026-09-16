@@ -448,14 +448,14 @@
       ],
       "positions": {
         "p_1789539805277": {
-          "x": 8,
-          "y": 50,
+          "x": 22,
+          "y": 70,
           "onBench": false,
-          "role": "Målvakt"
+          "role": "Högerback"
         }
       }
     }
   ],
-  "__updatedAt": "2026-09-16T08:04:24.999Z",
-  "__version": 17
+  "__updatedAt": "2026-09-16T08:04:27.457Z",
+  "__version": 18
 }

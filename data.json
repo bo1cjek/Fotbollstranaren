@@ -299,9 +299,10 @@
           "onBench": true
         },
         "p_1789562218977": {
-          "x": 0,
-          "y": 0,
-          "onBench": true
+          "x": 48,
+          "y": 80,
+          "onBench": false,
+          "role": "Höger mitt"
         },
         "p_1789562206972": {
           "x": 0,
@@ -436,6 +437,6 @@
       "positions": {}
     }
   ],
-  "__updatedAt": "2026-09-16T12:39:30.342Z",
-  "__version": 140
+  "__updatedAt": "2026-09-16T12:40:45.763Z",
+  "__version": 141
 }

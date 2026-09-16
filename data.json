@@ -430,10 +430,10 @@
       ],
       "positions": {
         "p_1789539805277": {
-          "x": 8,
-          "y": 50,
+          "x": 22,
+          "y": 75,
           "onBench": false,
-          "role": "Målvakt"
+          "role": "Vänsterback"
         }
       }
     },
@@ -455,6 +455,6 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T07:50:03.989Z",
-  "__version": 5
+  "__updatedAt": "2026-09-16T07:50:06.724Z",
+  "__version": 6
 }

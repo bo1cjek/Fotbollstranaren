@@ -465,14 +465,14 @@
       }
     }
   ],
-  "__updatedAt": "2026-09-16T16:18:13.168Z",
-  "__version": 170,
+  "__updatedAt": "2026-09-17T05:29:55.861Z",
+  "__version": 171,
   "exercises": [
     {
       "id": "ex_1789564983172",
       "name": "Passa",
       "duration": 10,
-      "info": "Passa bollen",
+      "info": "Passa bollen\nasd\nasd\nasd\nasd",
       "items": [
         {
           "type": "cone",
